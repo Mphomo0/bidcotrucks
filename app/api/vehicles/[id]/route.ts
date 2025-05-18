@@ -5,9 +5,9 @@ import { auth } from '@/auth'
 // GET /api/vehicles/:id - Fetch a vehicle by ID
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await params
+  const id = (await params).id
 
   try {
     const vehicle = await prisma.inventory.findUnique({
