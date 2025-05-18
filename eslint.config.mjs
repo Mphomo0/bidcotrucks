@@ -13,7 +13,10 @@ const eslintConfig = [
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
 
   {
-    files: ['lib/generated/prisma/client/**/*.{js,ts,d.ts}'],
+    files: [
+      'lib/generated/prisma/client/runtime/**/*.{js,ts}',
+      'lib/generated/prisma/client/**/*.{js,ts,d.ts}',
+    ],
     rules: {
       '@typescript-eslint/no-require-imports': 'off',
       '@typescript-eslint/no-unnecessary-type-constraint': 'off',
@@ -22,6 +25,7 @@ const eslintConfig = [
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-expressions': 'off', // Disable the rule causing the error
     },
   },
 ]
