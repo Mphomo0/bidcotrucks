@@ -25,7 +25,8 @@ const eslintConfig = [
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-expressions': 'off', // Disable the rule causing the error
+      '@typescript-eslint/no-unused-expressions': 'off', // Disable no-unused-expressions rule
+      '@typescript-eslint/no-this-alias': 'off', // Disable no-this-alias rule
     },
   },
 ]
