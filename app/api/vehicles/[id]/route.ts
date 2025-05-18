@@ -2,12 +2,12 @@ import { NextResponse, NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 
-type Params = {
-  id: string
-}
 // GET /api/vehicles/:id - Fetch a vehicle by ID
-export async function GET(req: NextRequest, context: { params: Params }) {
-  const { id } = context.params
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params
 
   try {
     const vehicle = await prisma.inventory.findUnique({
