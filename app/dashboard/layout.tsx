@@ -1,5 +1,8 @@
 import type { Metadata } from 'next'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import { Geist, Geist_Mono } from 'next/font/google'
+import { SessionProvider } from 'next-auth/react'
 import '../globals.css'
 
 const geistSans = Geist({
@@ -17,7 +20,7 @@ export const metadata: Metadata = {
   description: 'Your Favourite Truck Dealer App',
 }
 
-export default function Layout({
+export default function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
@@ -27,7 +30,10 @@ export default function Layout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <SessionProvider>
+          {children}
+          <ToastContainer />
+        </SessionProvider>
       </body>
     </html>
   )

@@ -1,5 +1,8 @@
 'use client'
 
+import { useEffect } from 'react'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 import { AppSidebar } from '@/components/sections/dashboard/AppSidebar'
 
 import {
@@ -17,7 +20,31 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar'
 
-export default function page() {
+export default function Dashboard() {
+  const { data: session, status } = useSession()
+  const router = useRouter()
+
+  useEffect(() => {
+    // If the user is not authenticated, redirect to login
+    if (status === 'unauthenticated') {
+      router.push('/login')
+    }
+  }, [status, router])
+
+  // Show loading state while checking authentication
+  if (status === 'loading') {
+    return (
+      <div className='flex h-screen items-center justify-center'>
+        Loading...
+      </div>
+    )
+  }
+
+  // Only render the dashboard if authenticated
+  if (!session) {
+    return null
+  }
+
   return (
     <SidebarProvider>
       <AppSidebar />

@@ -4,6 +4,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
+import { toast } from 'react-toastify'
 
 const tradeInFormSchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
@@ -16,9 +17,11 @@ const tradeInFormSchema = z.object({
   year: z.string().min(1, { message: 'Year is required' }),
   mileage: z.string().min(1, { message: 'Mileage is required' }),
   price: z.string().min(1, { message: 'Price range is required' }),
-  description: z.string().min(1, { message: 'Message is required' }),
-  tradeImages: z.string().min(1, { message: 'Image is required' }),
-  comments: z.string().min(1, { message: 'Comment is required' }),
+  description: z.string().optional(),
+  tradeImages: z
+    .any()
+    .refine((files) => files?.length > 0, { message: 'Image is required' }),
+  comments: z.string().optional(),
 })
 
 type TradeInFormData = z.infer<typeof tradeInFormSchema>
@@ -27,19 +30,54 @@ export default function TradeInForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
+    formState: { errors, isSubmitting },
   } = useForm<TradeInFormData>({
     resolver: zodResolver(tradeInFormSchema),
   })
 
   // Handle form submission
-  const onSubmit = (data: TradeInFormData) => {
-    console.log(data)
+  const onSubmit = async (data: TradeInFormData) => {
+    const formData = new FormData()
+
+    // Append all form fields
+    for (const [key, value] of Object.entries(data)) {
+      if (key === 'tradeImages') {
+        const files = value as FileList
+        Array.from(files).forEach((file) => {
+          formData.append('tradeImages', file)
+        })
+      } else {
+        formData.append(key, value as string)
+      }
+    }
+
+    console.log('Form data:', formData)
+
+    try {
+      const response = await fetch('/api/send-email/trade-in', {
+        method: 'POST',
+        body: formData,
+      })
+
+      const result = await response.json()
+
+      if (response.ok) {
+        toast.success('Message sent successfully!')
+        reset()
+      } else {
+        toast.error(result.message || 'Something went wrong')
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      toast.error('Failed to send message. Please try again later.')
+    }
   }
+
   return (
     <div className='w-full'>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mt-20 mb-20'>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} encType='multipart/form-data'>
           <h2 className='font-bold text-4xl text-center mb-6'>
             Personal Details
           </h2>
@@ -173,7 +211,7 @@ export default function TradeInForm() {
               <input
                 id='make'
                 type='text'
-                {...register}
+                {...register('make')}
                 className='w-full p-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
                 placeholder='Enter your make'
               />
@@ -277,7 +315,7 @@ export default function TradeInForm() {
             {/* Description Field */}
             <div>
               <label
-                htmlFor='Description'
+                htmlFor='description'
                 className='block font-semibold text-lg mb-2'
               >
                 Description
@@ -305,21 +343,16 @@ export default function TradeInForm() {
                 Vehicle Images
               </label>
               <input
-                id='description'
+                id='tradeImages'
                 type='file'
                 multiple
                 {...register('tradeImages')}
                 className='w-full p-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
                 placeholder='Vehicle Description'
               />
-              {errors.tradeImages && (
-                <p className='text-red-500 text-sm mt-1'>
-                  {errors.tradeImages.message}
-                </p>
-              )}
             </div>
 
-            {/* Additional Comments Field */}
+            {/* Comments Field */}
             <div>
               <label
                 htmlFor='comments'
@@ -329,10 +362,10 @@ export default function TradeInForm() {
               </label>
               <textarea
                 id='comments'
-                rows={8}
+                rows={4}
                 {...register('comments')}
                 className='w-full p-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
-                placeholder='Addtional Comments....'
+                placeholder='Additional comments...'
               />
               {errors.comments && (
                 <p className='text-red-500 text-sm mt-1'>
@@ -347,8 +380,9 @@ export default function TradeInForm() {
             <button
               type='submit'
               className='bg-[#24603a] text-white font-bold py-3 px-6 rounded uppercase w-full md:w-1/6 lg:w-1/6'
+              disabled={isSubmitting}
             >
-              Submit
+              {isSubmitting ? 'Submitting...' : 'Submit'}
             </button>
           </div>
         </form>

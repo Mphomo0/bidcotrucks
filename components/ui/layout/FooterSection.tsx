@@ -2,14 +2,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {
   FaFacebookF,
-  FaLinkedin,
-  FaXTwitter,
-  FaYoutube,
   FaPhone,
   FaEnvelope,
   FaLocationDot,
 } from 'react-icons/fa6'
-import ABSA from '@/public/images/icons/absa.png'
 import Wesbank from '@/public/images/icons/wesbank.png'
 import BidcoLogo from '@/public/images/bidco_logo.png'
 
@@ -20,13 +16,20 @@ const FooterSection = () => {
       <div className='max-w-7xl px-6 py-12 mx-auto'>
         <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-4'>
           <div className='sm:col-span-2'>
-            <Image
-              src={BidcoLogo}
-              width={150}
-              height={10}
-              alt='Bidco Logo'
-              className='mb-5'
-            />
+            <Link href='/' className='flex items-center py-2'>
+              <Image
+                src={BidcoLogo}
+                width={150}
+                height={10}
+                alt='Bidco Logo'
+                className='mb-5'
+              />
+
+              {/* <span className='text-2xl lg:text-4xl font-bold text-white'>
+                TruckDealer
+              </span> */}
+            </Link>
+
             <p className='text-white'>
               Bidco Trucks (Pty) Ltd, established in 2007, specializes in buying
               and selling quality second-hand trucks, trailers, and plant
@@ -76,19 +79,19 @@ const FooterSection = () => {
               <li className='flex items-center gap-2'>
                 <FaPhone size={15} fill='white' />
                 <span className='text-white transition-colors duration-300 dark:text-gray-300 hover:underline hover:cursor-pointer hover:text-green-500'>
-                  +27 1234567890
+                  012 808 9903/4/5
                 </span>
               </li>
               <li className='flex items-center gap-2'>
                 <FaEnvelope size={15} fill='white' />
                 <span className='text-white transition-colors duration-300 dark:text-gray-300 hover:underline hover:cursor-pointer hover:text-green-500'>
-                  email@email.co.za
+                  admin@bidco.co.za
                 </span>
               </li>
               <li className='flex items-center gap-2'>
                 <FaLocationDot size={15} fill='white' />
                 <span className='text-white transition-colors duration-300 dark:text-gray-300 hover:underline hover:cursor-pointer hover:text-green-500'>
-                  1234 Microsoft Street, Washington, South Africa, 2194
+                  Plot 28, Wolmaranspoort, Pretoria
                 </span>
               </li>
             </ul>
@@ -99,34 +102,30 @@ const FooterSection = () => {
 
         <div className='sm:flex sm:items-center sm:justify-between'>
           <div className='flex hover:cursor-pointer gap-2 mb-8'>
-            <Image src={ABSA} width={50} height={30} alt='ABSA Logo' />
-            <Image src={Wesbank} width={150} height={10} alt='Wesbank Logo' />
+            <Image
+              src={Wesbank}
+              width={100}
+              height={100}
+              alt='Wesbank Logo'
+              className='w-20 h-10'
+            />
             <p className='text-white text-start md:text-center md:text-lg md:p-4 pr-4'>
               Approved Dealership
             </p>
           </div>
 
           <div className='flex gap-4 hover:cursor-pointer'>
-            <FaFacebookF
-              size={40}
-              fill='blue'
-              className='bg-white rounded-full p-2'
-            />
-            <FaLinkedin
-              size={40}
-              fill='blue'
-              className='bg-white rounded-full p-2'
-            />
-            <FaXTwitter
-              size={40}
-              fill='black'
-              className='bg-white rounded-full p-2'
-            />
-            <FaYoutube
-              size={40}
-              fill='red'
-              className='bg-white rounded-full p-2'
-            />
+            <a
+              href='https://www.facebook.com/BidcoTrucks'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              <FaFacebookF
+                size={40}
+                fill='blue'
+                className='bg-white rounded-full p-2'
+              />
+            </a>
           </div>
         </div>
         <p className='text-white text-start md:text-center md:text-lg md:p-4 mt-8'>

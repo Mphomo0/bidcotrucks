@@ -4,6 +4,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
+import { toast } from 'react-toastify'
 
 const contactFormSchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
@@ -25,14 +26,35 @@ export default function ContactForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
+    formState: { errors, isSubmitting },
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
   })
 
   // Handle form submission
-  const onSubmit = (data: ContactFormData) => {
-    console.log(data)
+  const onSubmit = async (data: ContactFormData) => {
+    try {
+      const response = await fetch('/api/send-email/general', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ type: 'Contact', ...data }),
+      })
+
+      const result = await response.json()
+
+      if (response.ok) {
+        toast.success('Message sent successfully!')
+        reset()
+      } else {
+        toast.error(`Error: ${result.message || 'Something went wrong'}`)
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      toast.error('Failed to send message. Please try again later.')
+    }
   }
 
   return (
@@ -40,7 +62,7 @@ export default function ContactForm() {
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
         <h1>Contact Form</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className='grid grid-cols-1 md:grid-cols2 lg:grid-cols-2 gap-4'>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4'>
             {/* Name field */}
             <div>
               <label htmlFor='name' className='block mb-2'>
@@ -62,7 +84,7 @@ export default function ContactForm() {
 
             {/* Phone Number field */}
             <div>
-              <label htmlFor='name' className='block mb-2'>
+              <label htmlFor='phone' className='block mb-2'>
                 Contact Number
               </label>
               <input
@@ -129,9 +151,9 @@ export default function ContactForm() {
               {...register('subject')}
             >
               <option value=''>Select your Subject</option>
-              <option value='corolla'>Buy A Truck</option>
-              <option value='civic'>Finance</option>
-              <option value='f150'>Other</option>
+              <option value='buy-a-vehicle'>Buy A Vehicle</option>
+              <option value='help-with-finance'>Help with Finance</option>
+              <option value='other'>Other</option>
             </select>
 
             {errors.subject && (
@@ -162,8 +184,9 @@ export default function ContactForm() {
             <button
               type='submit'
               className='bg-[#24603a] text-white font-bold py-3 px-6 rounded uppercase w-full md:w-1/6 lg:w-1/6'
+              disabled={isSubmitting}
             >
-              SEND MESSAGE
+              {isSubmitting ? 'Sending...' : 'Send'}
             </button>
           </div>
         </form>

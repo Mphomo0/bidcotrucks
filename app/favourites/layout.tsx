@@ -1,6 +1,10 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
-import '../../globals.css'
+import '../globals.css'
+import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer } from 'react-toastify'
+import Navbar from '@/components/ui/layout/Navbar'
+import FooterSection from '@/components/ui/layout/FooterSection'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -17,7 +21,7 @@ export const metadata: Metadata = {
   description: 'Your Favourite Truck Dealer App',
 }
 
-export default function Layout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
@@ -27,7 +31,10 @@ export default function Layout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Navbar />
         {children}
+        <ToastContainer />
+        <FooterSection />
       </body>
     </html>
   )

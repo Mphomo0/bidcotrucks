@@ -1,23 +1,12 @@
 'use client'
 
 import * as React from 'react'
-import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
-} from 'lucide-react'
+import Image from 'next/image'
+import { Bot, Settings2, SquareTerminal } from 'lucide-react'
+import Link from 'next/link'
 
 import { NavMain } from '@/components/sections/dashboard/NavMain'
-import { NavProjects } from '@/components/sections/dashboard/NavProjects'
 import { NavUser } from '@/components/sections/dashboard/NavUser'
-import { TeamSwitcher } from '@/components/sections/dashboard/TeamSwitcher'
 import {
   Sidebar,
   SidebarContent,
@@ -26,90 +15,36 @@ import {
   SidebarRail,
 } from '@/components/ui/sidebar'
 
-// This is sample data.
 const data = {
-  user: {
-    name: 'Your Name',
-    email: 'm@example.com',
-    avatar: '/avatars/shadcn.jpg',
-  },
-  teams: [
-    {
-      name: 'Acme Inc',
-      logo: GalleryVerticalEnd,
-      plan: 'Enterprise',
-    },
-    {
-      name: 'Acme Corp.',
-      logo: AudioWaveform,
-      plan: 'Startup',
-    },
-    {
-      name: 'Evil Corp.',
-      logo: Command,
-      plan: 'Free',
-    },
-  ],
   navMain: [
     {
       title: 'Inventory Stock',
-      url: '#',
+      url: '/dashboard/vehicles',
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: 'All Stocks',
-          url: '#',
+          title: 'All Vehicles',
+          url: '/dashboard/vehicles',
         },
         {
           title: 'Add Stock',
-          url: '#',
-        },
-        {
-          title: 'Edit Stock',
-          url: '#',
+          url: '/dashboard/vehicles/addVehicles',
         },
       ],
     },
     {
       title: 'Users',
-      url: '#',
+      url: '/dashboard/users',
       icon: Bot,
       items: [
         {
           title: 'Add User',
-          url: '#',
+          url: '/dashboard/users/adduser',
         },
         {
-          title: 'Edit User',
-          url: '#',
-        },
-        {
-          title: 'All Users',
-          url: '#',
-        },
-      ],
-    },
-    {
-      title: 'Documentation',
-      url: '#',
-      icon: BookOpen,
-      items: [
-        {
-          title: 'Introduction',
-          url: '#',
-        },
-        {
-          title: 'Get Started',
-          url: '#',
-        },
-        {
-          title: 'Tutorials',
-          url: '#',
-        },
-        {
-          title: 'Changelog',
-          url: '#',
+          title: 'View Users',
+          url: '/dashboard/users',
         },
       ],
     },
@@ -119,39 +54,10 @@ const data = {
       icon: Settings2,
       items: [
         {
-          title: 'General',
-          url: '#',
-        },
-        {
-          title: 'Team',
-          url: '#',
-        },
-        {
-          title: 'Billing',
-          url: '#',
-        },
-        {
-          title: 'Limits',
-          url: '#',
+          title: 'Category',
+          url: '/dashboard/category',
         },
       ],
-    },
-  ],
-  projects: [
-    {
-      name: 'Design Engineering',
-      url: '#',
-      icon: Frame,
-    },
-    {
-      name: 'Sales & Marketing',
-      url: '#',
-      icon: PieChart,
-    },
-    {
-      name: 'Travel',
-      url: '#',
-      icon: Map,
     },
   ],
 }
@@ -160,14 +66,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible='icon' {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <Link href='/dashboard'>
+          <Image src='/images/logo.png' alt='Logo' width={100} height={100} />
+        </Link>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

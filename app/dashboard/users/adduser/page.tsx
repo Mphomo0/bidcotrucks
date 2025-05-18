@@ -1,6 +1,9 @@
 'use client'
 
+import { useEffect } from 'react'
 import { AppSidebar } from '@/components/sections/dashboard/AppSidebar'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 import {
   Breadcrumb,
@@ -16,8 +19,33 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/ui/sidebar'
+import CreateUser from './CreateUser'
 
-export default function User() {
+export default function AddUser() {
+  const { data: session, status } = useSession()
+  const router = useRouter()
+
+  useEffect(() => {
+    // If the user is not authenticated, redirect to login
+    if (status === 'unauthenticated') {
+      router.push('/login')
+    }
+  }, [status, router])
+
+  // Show loading state while checking authentication
+  if (status === 'loading') {
+    return (
+      <div className='flex h-screen items-center justify-center'>
+        Loading...
+      </div>
+    )
+  }
+
+  // Only render the dashboard if authenticated
+  if (!session) {
+    return null
+  }
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -41,13 +69,10 @@ export default function User() {
             </Breadcrumb>
           </div>
         </header>
-        <div className='flex flex-1 flex-col gap-4 p-4 pt-0'>
-          <div className='grid auto-rows-min gap-4 md:grid-cols-3'>
-            <div className='aspect-video rounded-xl bg-muted/50' />
-            <div className='aspect-video rounded-xl bg-muted/50' />
-            <div className='aspect-video rounded-xl bg-muted/50' />
+        <div className='p-4 pt-0'>
+          <div className='min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min'>
+            <CreateUser />
           </div>
-          <div className='min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min' />
         </div>
       </SidebarInset>
     </SidebarProvider>

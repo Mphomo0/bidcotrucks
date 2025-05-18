@@ -1,7 +1,7 @@
 import React from 'react'
 import PageWrapper from '@/components/ui/layout/PageWrapper'
 import Address from '@/components/sections/contact/Address'
-import ContactForm from '@/components/sections/contact/ContactForm'
+import ContactForm from '@/components/sections/forms/ContactForm'
 import MapLocation from '@/components/sections/contact/MapLocation'
 
 export default function Contact() {

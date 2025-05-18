@@ -10,38 +10,52 @@ export default function Address() {
         {/* email address card */}
         <div className='bg-white border border-gray-200 rounded-lg shadow-lg p-6'>
           <div className='flex justify-center mb-4 mt-8'>
-            <Image src={iconImage10} alt='email icon' width={70} height={70} />
+            <Image
+              src={iconImage10}
+              alt='email icon'
+              width={70}
+              height={70}
+              className='w-12 h-12'
+            />
           </div>
           <h3 className='text-xl font-bold text-center mb-4'>Email Address</h3>
-          <p className='text-center text-gray-600 mb-8'>
-            mail@truckdealer.co.za
-          </p>
+          <p className='text-center text-gray-600 mb-8'>admin@bidco.co.za</p>
         </div>
 
         {/* Phone Number card */}
         <div className='bg-white border border-gray-200 rounded-lg shadow-lg p-6'>
           <div className='flex justify-center mb-4 mt-8'>
-            <Image src={iconImage11} alt='email icon' width={70} height={70} />
+            <Image
+              src={iconImage11}
+              alt='email icon'
+              width={70}
+              height={70}
+              className='w-12 h-12'
+            />
           </div>
           <h3 className='text-xl font-bold text-center mb-4'>
             Contact Numbers
           </h3>
           <p className='text-center text-gray-600 mb-8'>
-            <span className='font-bold'>Office:</span> 011 011 0110
-            <br />
-            <span className='font-bold'>Cell:</span> 070 607 0990
+            <span className='font-bold'>Office:</span> 012 808 9903/4/5
           </p>
         </div>
         {/* Office Address card */}
         <div className='bg-white border border-gray-200 rounded-lg shadow-lg p-6'>
           <div className='flex justify-center mb-4 mt-8'>
-            <Image src={iconImage12} alt='email icon' height={70} width={70} />
+            <Image
+              src={iconImage12}
+              alt='email icon'
+              height={70}
+              width={70}
+              className='w-12 h-12'
+            />
           </div>
           <h3 className='text-xl font-bold text-center mb-4'>Our Address</h3>
           <p className='text-center text-gray-600 mb-8'>
-            3 Custom St, Ferndale,
+            Plot 28, Wolmaranspoort,
             <br />
-            Randburg, 2194
+            Pretoria
           </p>
         </div>
       </div>

@@ -8,11 +8,19 @@ import { Button } from '@/components/ui/button'
 import Phone from '@/public/images/icons/7.png'
 import BidcoLogo from '@/public/images/bidco_logo.png'
 
+import { getWithExpiry } from '@/lib/localStorageWithExpiry'
+
+const FAVOURITES_KEY = 'favourites'
+
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [hasFavourites, setHasFavourites] = useState(false)
 
   useEffect(() => {
+    const favs = getWithExpiry(FAVOURITES_KEY) || []
+    setHasFavourites(favs.length > 0)
+
     const handleScroll = () => {
       const offset = window.scrollY
       setScrolled(offset > 50)
@@ -32,6 +40,7 @@ export default function Navbar() {
     { href: '/about', label: 'About Us' },
     { href: '/inventory', label: 'Our Inventory' },
     { href: '/contact', label: 'Contact Us' },
+    ...(hasFavourites ? [{ href: '/favourites', label: 'Favourites' }] : []),
   ]
   return (
     <nav
@@ -47,26 +56,35 @@ export default function Navbar() {
               {/* <span className='text-2xl lg:text-4xl font-bold text-white'>
                 TruckDealer
               </span> */}
-            </Link>
-            <Image
-              src={BidcoLogo}
-              width={150}
-              height={10}
-              alt='Bidco Logo'
-              className='mb-5'
-            />
 
+              <Image
+                src={BidcoLogo}
+                width={150}
+                height={10}
+                alt='Bidco Logo'
+                className='mb-5'
+              />
+            </Link>
             {/* Phone Number - Hidden on mobile and small tablets */}
             <div className='hidden lg:flex items-center space-x-2 text-white'>
-              <Image src={Phone} alt='phone icon' width={40} height={40} />
+              <Image
+                src={Phone}
+                alt='phone icon'
+                width={40}
+                height={40}
+                priority
+                className='w-10 h-10'
+              />
               <span className='border-l border-white h-10 border-2'></span>
               <div className='flex flex-col'>
                 <span className='text-xs sm:text-sm text-white'>
                   Need help? Talk to an Expert
                 </span>
-                <span className='text-base sm:text-lg font-semibold'>
-                  011-474-7070
-                </span>
+                <Link href='tel:0128089903'>
+                  <span className='text-base sm:text-lg font-semibold'>
+                    012 808 9903
+                  </span>
+                </Link>
               </div>
             </div>
           </div>
@@ -77,7 +95,7 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className='text-sm xl:text-base text-white hover:text-red-500 transition-colors whitespace-nowrap'
+                className='text-sm xl:text-base text-white hover:text-red-500'
               >
                 {link.label}
               </Link>
@@ -127,7 +145,9 @@ export default function Navbar() {
                   <span className='text-sm text-white'>
                     Need help? Talk to an Expert
                   </span>
-                  <span className='text-2xl font-bold'>011-474-7070</span>
+                  <Link href='tel:0128089903'>
+                    <span className='text-2xl font-bold'>012-808-9903</span>
+                  </Link>
                 </div>
               </div>
             </div>
