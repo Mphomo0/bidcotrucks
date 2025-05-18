@@ -3,11 +3,12 @@ import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 
 // GET /api/vehicles/:id - Fetch a vehicle by ID
-export const GET = async (
+export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
-) => {
-  const id = await params.id
+  context: { params: { id: string } }
+) {
+  const id = context.params.id
+
   try {
     const vehicle = await prisma.inventory.findUnique({
       where: { id },
