@@ -5,7 +5,7 @@ import { auth } from '@/auth'
 // GET /api/vehicles/:id - Fetch a vehicle by ID
 export async function GET(
   req: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Record<string, string> }
 ) {
   const id = context.params.id
 
