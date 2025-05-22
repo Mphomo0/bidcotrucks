@@ -21,9 +21,9 @@ import { v4 as uuidv4 } from 'uuid'
 
 // Updated schema to expect array of objects
 const addVehicleSchema = z.object({
-  name: z.string().min(3, { message: 'Name is required' }),
-  make: z.string().min(3),
-  model: z.string().min(3),
+  name: z.string().min(2, { message: 'Name is required' }),
+  make: z.string().min(2, { message: 'Make is required' }),
+  model: z.string().min(2, { message: 'Model is required' }),
   year: z.coerce.number().min(1900, { message: 'Enter a valid year' }),
   price: z.coerce.number().min(1),
   mileage: z.coerce.number().min(0),
