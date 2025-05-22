@@ -24,7 +24,7 @@ export default function Hero() {
               BUYERS & SELLERS OF QUALITY SECOND HAND TRUCKS, TRAILERS & PLANT.
             </p>
             <div className='flex justify-center items-center gap-4 mt-6'>
-              <Link href={'/'}>
+              <Link href={'/inventory'}>
                 <Button
                   size='lg'
                   className='bg-[#24603a] hover:bg-red-700 text-white px-6 lg:py-6 text-base sm:px-6 sm:py-4 sm:text-lg md:px-10 md:py-5 md:text-xl'
@@ -32,7 +32,7 @@ export default function Hero() {
                   BUY A TRUCK
                 </Button>
               </Link>
-              <Link href={'/'}>
+              <Link href={'/trade-in'}>
                 <Button
                   size='lg'
                   className='bg-red-600 hover:bg-[#24603a] text-white px-6 lg:py-6 text-base sm:px-8 sm:py-4 sm:text-lg md:px-10 md:py-5 md:text-xl'
