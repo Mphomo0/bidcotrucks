@@ -145,12 +145,14 @@ export default function Category() {
             <Separator orientation='vertical' className='mr-2 h-4' />
             <Breadcrumb>
               <BreadcrumbList>
-                <BreadcrumbItem className='hidden md:block'>
-                  <BreadcrumbLink href='#'>Dashboard</BreadcrumbLink>
+                <BreadcrumbItem className='md:block text-black hover:text-black'>
+                  <BreadcrumbLink href='/dashboard'>Dashboard</BreadcrumbLink>
                 </BreadcrumbItem>
-                <BreadcrumbSeparator className='hidden md:block' />
+                <BreadcrumbSeparator className='md:block text-black' />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Categories</BreadcrumbPage>
+                  <BreadcrumbPage className='text-black hover:text-black'>
+                    Categories
+                  </BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>

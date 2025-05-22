@@ -17,7 +17,7 @@ export default function Hero() {
               className='text-2xl md:text-5xl lg:text-6xl xl:text-7xl font-bold uppercase'
               style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}
             >
-              Welcome to Truck Dealer
+              Welcome to Bidco Trucks
             </h1>
             <p className='text-lg sm:text-xl md:text-2xl font-semibold'>
               {/* Optional description */}

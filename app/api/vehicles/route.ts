@@ -3,11 +3,22 @@ import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 import slugify from 'slugify'
 
+// interface Filters {
+//   categoryId?: string
+//   make?: string
+//   model?: string
+//   year?: number
+// }
+
 interface Filters {
   categoryId?: string
   make?: string
   model?: string
   year?: number
+  price?: {
+    gte?: number
+    lte?: number
+  }
 }
 
 // POST /api/vehicles to create a new vehicle
@@ -144,43 +155,172 @@ export const POST = auth(async function (req) {
   }
 })
 
+// export const GET = async (req: NextRequest) => {
+//   try {
+//     // Get the search parameters from the request URL
+//     const { searchParams } = new URL(req.url)
+
+//     // Parse 'page' and 'limit' query parameters, with default values
+//     const page = Number.parseInt(searchParams.get('page') || '1', 10)
+//     const limit = Number.parseInt(searchParams.get('limit') || '10', 10)
+
+//     // Calculate how many items to skip
+//     const skip = (page - 1) * limit
+
+//     // Extract and prepare filters
+//     const categoryId = searchParams.get('category')
+//     const make = searchParams.get('make')
+//     const model = searchParams.get('model')
+//     const year = searchParams.get('year')
+
+//     const filters: Filters = {}
+
+//     if (categoryId) filters.categoryId = categoryId
+//     if (make) filters.make = make
+//     if (model) filters.model = model
+//     if (year) filters.year = parseInt(year)
+
+//     // First, let's check if the inventory table exists and has the expected structure
+//     // by just getting the count without any complex queries
+//     const total = await prisma.inventory.count()
+
+//     // Now let's fetch the data with a simpler query first
+//     const vehicles = await prisma.inventory.findMany({
+//       skip,
+//       take: limit,
+//       where: filters,
+//     })
+
+//     // Return the paginated response with metadata
+//     return NextResponse.json(
+//       {
+//         data: vehicles,
+//         meta: {
+//           total,
+//           page,
+//           limit,
+//           totalPages: Math.ceil(total / limit),
+//         },
+//       },
+//       { status: 200 }
+//     )
+//   } catch (error) {
+//     console.error('Vehicle fetch error:', error)
+//     // Return more detailed error information to help with debugging
+//     return NextResponse.json(
+//       {
+//         error: 'Failed to fetch vehicles',
+//         details: error instanceof Error ? error.message : String(error),
+//       },
+//       { status: 500 }
+//     )
+//   }
+// }
+
+// export const GET = async (req: NextRequest) => {
+//   try {
+//     const { searchParams } = new URL(req.url)
+
+//     const page = Number.parseInt(searchParams.get('page') || '1', 10)
+//     const limit = Number.parseInt(searchParams.get('limit') || '10', 10)
+//     const skip = (page - 1) * limit
+
+//     const categoryId = searchParams.get('category')
+//     const make = searchParams.get('make')
+//     const model = searchParams.get('model')
+//     const year = searchParams.get('year')
+
+//     const minPrice = searchParams.get('minPrice')
+//     const maxPrice = searchParams.get('maxPrice')
+
+//     const filters: Filters = {}
+
+//     if (categoryId) filters.categoryId = categoryId
+//     if (make) filters.make = make
+//     if (model) filters.model = model
+//     if (year) filters.year = parseInt(year)
+
+//     if (minPrice || maxPrice) {
+//       filters.price = {}
+//       if (minPrice) filters.price.gte = parseFloat(minPrice)
+//       if (maxPrice) filters.price.lte = parseFloat(maxPrice)
+//     }
+
+//     const total = await prisma.inventory.count({ where: filters })
+
+//     const vehicles = await prisma.inventory.findMany({
+//       skip,
+//       take: limit,
+//       where: filters,
+//     })
+
+//     return NextResponse.json(
+//       {
+//         data: vehicles,
+//         meta: {
+//           total,
+//           page,
+//           limit,
+//           totalPages: Math.ceil(total / limit),
+//         },
+//       },
+//       { status: 200 }
+//     )
+//   } catch (error) {
+//     console.error('Vehicle fetch error:', error)
+//     return NextResponse.json(
+//       {
+//         error: 'Failed to fetch vehicles',
+//         details: error instanceof Error ? error.message : String(error),
+//       },
+//       { status: 500 }
+//     )
+//   }
+// }
+
 export const GET = async (req: NextRequest) => {
   try {
-    // Get the search parameters from the request URL
     const { searchParams } = new URL(req.url)
 
-    // Parse 'page' and 'limit' query parameters, with default values
     const page = Number.parseInt(searchParams.get('page') || '1', 10)
     const limit = Number.parseInt(searchParams.get('limit') || '10', 10)
-
-    // Calculate how many items to skip
     const skip = (page - 1) * limit
 
-    // Extract and prepare filters
     const categoryId = searchParams.get('category')
     const make = searchParams.get('make')
     const model = searchParams.get('model')
     const year = searchParams.get('year')
+
+    const minPrice = searchParams.get('minPrice')
+    const maxPrice = searchParams.get('maxPrice')
+
+    const sort = searchParams.get('sort') || 'createdAt'
+    const order = searchParams.get('order') || 'desc'
 
     const filters: Filters = {}
 
     if (categoryId) filters.categoryId = categoryId
     if (make) filters.make = make
     if (model) filters.model = model
-    if (year) filters.year = parseInt(year)
+    if (year) filters.year = Number.parseInt(year)
 
-    // First, let's check if the inventory table exists and has the expected structure
-    // by just getting the count without any complex queries
-    const total = await prisma.inventory.count()
+    if (minPrice || maxPrice) {
+      filters.price = {}
+      if (minPrice) filters.price.gte = Number.parseFloat(minPrice)
+      if (maxPrice) filters.price.lte = Number.parseFloat(maxPrice)
+    }
 
-    // Now let's fetch the data with a simpler query first
+    const total = await prisma.inventory.count({ where: filters })
+
     const vehicles = await prisma.inventory.findMany({
       skip,
       take: limit,
       where: filters,
+      orderBy: {
+        [sort]: order,
+      },
     })
 
-    // Return the paginated response with metadata
     return NextResponse.json(
       {
         data: vehicles,
@@ -195,7 +335,6 @@ export const GET = async (req: NextRequest) => {
     )
   } catch (error) {
     console.error('Vehicle fetch error:', error)
-    // Return more detailed error information to help with debugging
     return NextResponse.json(
       {
         error: 'Failed to fetch vehicles',

@@ -120,7 +120,14 @@
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
+}
+
+.keen-slider__slide {
+  min-width: 908px;
+  max-width: 908px;
+  transform: translate3d(0px, 0px, 0px);
+}
+
+.myspace {
+  margin: 32px !important;
 }

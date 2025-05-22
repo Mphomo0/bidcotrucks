@@ -55,14 +55,13 @@ export default function Dashboard() {
             <Separator orientation='vertical' className='mr-2 h-4' />
             <Breadcrumb>
               <BreadcrumbList>
-                <BreadcrumbItem className='hidden md:block'>
-                  <BreadcrumbLink href='#'>
-                    Building Your Application
+                <BreadcrumbItem className='text-black'>
+                  <BreadcrumbLink
+                    href='/dashboard'
+                    className='text-black hover:text-black'
+                  >
+                    Dashboard
                   </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className='hidden md:block' />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -70,10 +69,27 @@ export default function Dashboard() {
         </header>
         <div className='flex flex-1 flex-col gap-4 p-4 pt-0'>
           <div className='grid auto-rows-min gap-4 md:grid-cols-3'>
-            <div className='aspect-video rounded-xl bg-muted/50' />
-            <div className='aspect-video rounded-xl bg-muted/50' />
-            <div className='aspect-video rounded-xl bg-muted/50' />
+            <div className='aspect-video rounded-xl bg-muted/50 flex flex-col justify-center items-center p-4'>
+              <h2 className='text-lg font-semibold'>Revenue</h2>
+              <p className='text-2xl font-bold'>$24,500</p>
+              <span className='text-sm text-muted-foreground'>
+                Monthly Revenue
+              </span>
+            </div>
+            <div className='aspect-video rounded-xl bg-muted/50 flex flex-col justify-center items-center p-4'>
+              <h2 className='text-lg font-semibold'>New Users</h2>
+              <p className='text-2xl font-bold'>1,200</p>
+              <span className='text-sm text-muted-foreground'>This Month</span>
+            </div>
+            <div className='aspect-video rounded-xl bg-muted/50 flex flex-col justify-center items-center p-4'>
+              <h2 className='text-lg font-semibold'>Support Tickets</h2>
+              <p className='text-2xl font-bold'>87</p>
+              <span className='text-sm text-muted-foreground'>
+                Open Tickets
+              </span>
+            </div>
           </div>
+
           <div className='min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min' />
         </div>
       </SidebarInset>

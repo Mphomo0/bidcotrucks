@@ -28,7 +28,7 @@ const data = {
           url: '/dashboard/vehicles',
         },
         {
-          title: 'Add Stock',
+          title: 'Add Vehicle',
           url: '/dashboard/vehicles/addVehicles',
         },
       ],

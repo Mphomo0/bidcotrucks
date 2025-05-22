@@ -88,14 +88,14 @@ export default function Profile() {
           <SidebarTrigger className='-ml-1' />
           <Breadcrumb>
             <BreadcrumbList>
-              <BreadcrumbItem className='hidden md:block'>
-                <BreadcrumbLink href='#'>
-                  Building Your Application
+              <BreadcrumbItem className='text-black'>
+                <BreadcrumbLink href='/dashboard' className='hover:text-black'>
+                  Dashboard
                 </BreadcrumbLink>
               </BreadcrumbItem>
-              <BreadcrumbSeparator className='hidden md:block' />
+              <BreadcrumbSeparator className='text-black' />
               <BreadcrumbItem>
-                <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                <BreadcrumbPage className='text-black'>Profile</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>

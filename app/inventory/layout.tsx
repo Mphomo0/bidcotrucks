@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
-import '../globals.css'
 import 'react-toastify/dist/ReactToastify.css'
+import '../globals.css'
 import { ToastContainer } from 'react-toastify'
 import Navbar from '@/components/ui/layout/Navbar'
 import FooterSection from '@/components/ui/layout/FooterSection'

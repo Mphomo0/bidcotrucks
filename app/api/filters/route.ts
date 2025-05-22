@@ -1,7 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// Handles GET /api/filters?categoryId=...&make=...&model=...
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -10,23 +9,22 @@ export async function GET(request: NextRequest) {
     const make = searchParams.get('make')
     const model = searchParams.get('model')
 
-    // Always return full categories list
-    const categories = await prisma.category.findMany()
+    const where = {
+      ...(categoryId ? { categoryId } : {}),
+      ...(make ? { make } : {}),
+      ...(model ? { model } : {}),
+    }
 
-    // Start building filter conditions
-    const baseWhere: Record<string, string> = {}
-    if (categoryId) baseWhere.categoryId = categoryId
-    if (make) baseWhere.make = make
-    if (model) baseWhere.model = model
+    const categories = await prisma.category.findMany({
+      select: { id: true, name: true },
+    })
 
-    // Makes for selected category
     const makes = await prisma.inventory.findMany({
       where: categoryId ? { categoryId } : undefined,
       distinct: ['make'],
       select: { make: true },
     })
 
-    // Models for selected category + make
     const models = await prisma.inventory.findMany({
       where: {
         ...(categoryId ? { categoryId } : {}),
@@ -36,7 +34,6 @@ export async function GET(request: NextRequest) {
       select: { model: true },
     })
 
-    // Years for selected category + make + model
     const years = await prisma.inventory.findMany({
       where: {
         ...(categoryId ? { categoryId } : {}),
@@ -47,11 +44,25 @@ export async function GET(request: NextRequest) {
       select: { year: true },
     })
 
+    const priceRange = await prisma.inventory.aggregate({
+      where,
+      _min: {
+        price: true,
+      },
+      _max: {
+        price: true,
+      },
+    })
+
     return NextResponse.json({
       categories,
       makes: makes.map((m) => m.make),
       models: models.map((m) => m.model),
       years: years.map((y) => y.year),
+      priceRange: {
+        min: priceRange._min.price ?? 0,
+        max: priceRange._max.price ?? 0,
+      },
     })
   } catch (error) {
     console.error('Error fetching filters:', error)

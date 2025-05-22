@@ -56,14 +56,19 @@ export default function AddUser() {
             <Separator orientation='vertical' className='mr-2 h-4' />
             <Breadcrumb>
               <BreadcrumbList>
-                <BreadcrumbItem className='hidden md:block'>
-                  <BreadcrumbLink href='#'>
-                    Building Your Application
+                <BreadcrumbItem className='text-black'>
+                  <BreadcrumbLink
+                    href='/dashboard'
+                    className='hover:text-black'
+                  >
+                    Dashboard
                   </BreadcrumbLink>
                 </BreadcrumbItem>
-                <BreadcrumbSeparator className='hidden md:block' />
+                <BreadcrumbSeparator className='text-black' />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                  <BreadcrumbPage className='text-black'>
+                    Add User
+                  </BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>

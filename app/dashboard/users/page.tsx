@@ -141,12 +141,17 @@ export default function UserPage() {
             <Separator orientation='vertical' className='mr-2 h-4' />
             <Breadcrumb>
               <BreadcrumbList>
-                <BreadcrumbItem className='hidden md:block text-black'>
-                  <BreadcrumbLink href='#'>Dashboard</BreadcrumbLink>
+                <BreadcrumbItem className='text-black'>
+                  <BreadcrumbLink
+                    href='/dashboard'
+                    className='hover:text-black'
+                  >
+                    Dashboard
+                  </BreadcrumbLink>
                 </BreadcrumbItem>
-                <BreadcrumbSeparator className='hidden md:block' />
+                <BreadcrumbSeparator className='text-black' />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Users</BreadcrumbPage>
+                  <BreadcrumbPage className='text-black'>Users</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
