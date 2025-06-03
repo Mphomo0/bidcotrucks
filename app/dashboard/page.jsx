@@ -10,8 +10,6 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import { Separator } from '@/components/ui/separator'
 import {
@@ -19,6 +17,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/ui/sidebar'
+import { AnalyticsDashboard } from '@/components/analytics-dashboard'
 
 export default function Dashboard() {
   const { data: session, status } = useSession()
@@ -68,29 +67,8 @@ export default function Dashboard() {
           </div>
         </header>
         <div className='flex flex-1 flex-col gap-4 p-4 pt-0'>
-          <div className='grid auto-rows-min gap-4 md:grid-cols-3'>
-            <div className='aspect-video rounded-xl bg-muted/50 flex flex-col justify-center items-center p-4'>
-              <h2 className='text-lg font-semibold'>Revenue</h2>
-              <p className='text-2xl font-bold'>$24,500</p>
-              <span className='text-sm text-muted-foreground'>
-                Monthly Revenue
-              </span>
-            </div>
-            <div className='aspect-video rounded-xl bg-muted/50 flex flex-col justify-center items-center p-4'>
-              <h2 className='text-lg font-semibold'>New Users</h2>
-              <p className='text-2xl font-bold'>1,200</p>
-              <span className='text-sm text-muted-foreground'>This Month</span>
-            </div>
-            <div className='aspect-video rounded-xl bg-muted/50 flex flex-col justify-center items-center p-4'>
-              <h2 className='text-lg font-semibold'>Support Tickets</h2>
-              <p className='text-2xl font-bold'>87</p>
-              <span className='text-sm text-muted-foreground'>
-                Open Tickets
-              </span>
-            </div>
-          </div>
-
-          <div className='min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min' />
+          {/* Analytics Dashboard */}
+          <AnalyticsDashboard />
         </div>
       </SidebarInset>
     </SidebarProvider>

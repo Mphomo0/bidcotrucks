@@ -26,7 +26,7 @@ export default function Navbar() {
       setScrolled(offset > 50)
     }
 
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
@@ -53,10 +53,6 @@ export default function Navbar() {
           {/* Logo and Phone Section */}
           <div className='flex items-center space-x-4 lg:space-x-8'>
             <Link href='/' className='flex items-center py-2'>
-              {/* <span className='text-2xl lg:text-4xl font-bold text-white'>
-                TruckDealer
-              </span> */}
-
               <Image
                 src={BidcoLogo}
                 width={150}

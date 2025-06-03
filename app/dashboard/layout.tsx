@@ -16,8 +16,9 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'TruckDealer App',
-  description: 'Your Favourite Truck Dealer App',
+  title: 'Dashboard | Manage Your Account & Listings | Bidco Trucks',
+  description:
+    'Bidco Trucks (Pty) Ltd specializes in buying and selling clean second-hand trucks, trailers, and plant equipment. Serving South Africa and neighboring countries, we offer quality vehicles at competitive prices.',
 }
 
 export default function DashboardLayout({
@@ -30,6 +31,7 @@ export default function DashboardLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <head />
         <SessionProvider>
           {children}
           <ToastContainer />

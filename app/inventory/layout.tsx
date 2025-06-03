@@ -5,6 +5,7 @@ import '../globals.css'
 import { ToastContainer } from 'react-toastify'
 import Navbar from '@/components/ui/layout/Navbar'
 import FooterSection from '@/components/ui/layout/FooterSection'
+import { PostHogProvider } from '../providers'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -17,8 +18,9 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'TruckDealer App',
-  description: 'Your Favourite Truck Dealer App',
+  title: 'Used Trucks & Trailers Inventory | Bidco Trucks South Africa',
+  description:
+    'Bidco Trucks (Pty) Ltd specializes in buying and selling clean second-hand trucks, trailers, and plant equipment. Serving South Africa and neighboring countries, we offer quality vehicles at competitive prices.',
 }
 
 export default function RootLayout({
@@ -31,10 +33,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
-        {children}
-        <ToastContainer />
-        <FooterSection />
+        <head />
+        <PostHogProvider>
+          <Navbar />
+          {children}
+          <ToastContainer />
+          <FooterSection />
+        </PostHogProvider>
       </body>
     </html>
   )

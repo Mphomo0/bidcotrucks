@@ -100,7 +100,7 @@ const Testimonials = () => {
         <h3 className='text-[#24603a] text-xl font-bold text-center mb-2 mt-12'>
           Our Testimonials
         </h3>
-        <h2 className='text-center text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl'>
+        <h2 className='text-center text-4xl font-bold tracking-tight text-black sm:text-5xl'>
           Read trusted reviews from our customers
         </h2>
 
@@ -122,9 +122,8 @@ const Testimonials = () => {
                       height={50}
                       className='rounded-full h-12 w-12 object-cover'
                     />
-
                     <div>
-                      <div className='flex justify-center gap-0.5 text-green-500'>
+                      <div className='flex justify-center gap-0.5 text-green-600'>
                         {Array(5)
                           .fill(0)
                           .map((_, i) => (
@@ -139,13 +138,12 @@ const Testimonials = () => {
                             </svg>
                           ))}
                       </div>
-                      <p className='mt-0.5 text-lg font-medium text-gray-900'>
+                      <p className='mt-0.5 text-lg font-medium text-black'>
                         {testimonial.name}
                       </p>
                     </div>
                   </div>
-
-                  <p className='mt-4 text-gray-700'>{testimonial.review}</p>
+                  <p className='mt-4 text-black'>{testimonial.review}</p>
                 </blockquote>
               </div>
             ))}
@@ -153,19 +151,21 @@ const Testimonials = () => {
 
           <div className='mt-6 flex items-center justify-center gap-4'>
             <button
-              className='rounded-full border border-gray-400 p-3 text-gray-500 transition hover:bg-gray-100'
+              className='rounded-full border border-gray-600 p-3 text-black transition hover:bg-gray-200'
               onClick={() => slider && slider.prev()}
+              aria-label='Previous testimonial'
             >
               &larr;
             </button>
 
-            <span className='text-sm text-gray-900'>
+            <span className='text-sm text-black font-medium'>
               {currentSlide} / {totalSlides}
             </span>
 
             <button
-              className='rounded-full border border-gray-400 p-3 text-gray-500 transition hover:bg-gray-100'
+              className='rounded-full border border-gray-600 p-3 text-black transition hover:bg-gray-200'
               onClick={() => slider && slider.next()}
+              aria-label='Next testimonial'
             >
               &rarr;
             </button>

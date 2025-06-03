@@ -24,10 +24,6 @@ const FooterSection = () => {
                 alt='Bidco Logo'
                 className='mb-5'
               />
-
-              {/* <span className='text-2xl lg:text-4xl font-bold text-white'>
-                TruckDealer
-              </span> */}
             </Link>
 
             <p className='text-white'>
@@ -119,6 +115,7 @@ const FooterSection = () => {
               href='https://www.facebook.com/BidcoTrucks'
               target='_blank'
               rel='noopener noreferrer'
+              aria-label='Facebook'
             >
               <FaFacebookF
                 size={40}

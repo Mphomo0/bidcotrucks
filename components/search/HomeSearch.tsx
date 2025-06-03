@@ -147,8 +147,11 @@ export default function HomeSearch() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8'>
             <div>
-              <label className='block'>Category</label>
+              <label htmlFor='category' className='block'>
+                Category
+              </label>
               <select
+                id='category'
                 {...register('category')}
                 className='w-full p-4 border rounded'
                 disabled={loading || options.categories.length === 0}
@@ -168,8 +171,11 @@ export default function HomeSearch() {
             </div>
 
             <div>
-              <label className='block'>Make</label>
+              <label htmlFor='make' className='block'>
+                Make
+              </label>
               <select
+                id='make'
                 {...register('make')}
                 className='w-full p-4 border rounded'
                 disabled={
@@ -189,8 +195,11 @@ export default function HomeSearch() {
             </div>
 
             <div>
-              <label className='block'>Model</label>
+              <label htmlFor='model' className='block'>
+                Model
+              </label>
               <select
+                id='model'
                 {...register('model')}
                 className='w-full p-4 border rounded'
                 disabled={
@@ -210,8 +219,11 @@ export default function HomeSearch() {
             </div>
 
             <div>
-              <label className='block'>Year</label>
+              <label htmlFor='year' className='block'>
+                Year
+              </label>
               <select
+                id='year'
                 {...register('year')}
                 className='w-full p-4 border rounded'
                 disabled={
