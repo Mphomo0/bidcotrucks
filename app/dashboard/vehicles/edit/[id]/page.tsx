@@ -1,11 +1,17 @@
 'use client'
 
+import type React from 'react'
+
 import { useEffect, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
+import Image from 'next/image'
 import { useSession } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
+import { Trash2, Upload } from 'lucide-react'
 import { AppSidebar } from '@/components/sections/dashboard/AppSidebar'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -14,12 +20,19 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
+import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/ui/sidebar'
+import { v4 as uuidv4 } from 'uuid'
+import { upload } from '@imagekit/next'
+
+interface VehicleImage {
+  url: string
+}
 
 interface Vehicle {
   id: string
@@ -35,6 +48,7 @@ interface Vehicle {
   status: string
   categoryId: string
   description?: string
+  images: VehicleImage[]
 }
 
 interface Category {
@@ -51,15 +65,31 @@ export default function EditVehiclePage() {
 
   const [loading, setLoading] = useState(true)
   const [categories, setCategories] = useState<Category[]>([])
+  const [uploadingImages] = useState(false)
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  const [previewImages, setPreviewImages] = useState<string[]>([])
+  const [isUploading, setIsUploading] = useState(false)
 
   const {
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors, isSubmitting },
-  } = useForm<Vehicle>()
+  } = useForm<Vehicle>({
+    defaultValues: {
+      images: [],
+    },
+  })
+
+  const watchedImages = watch('images') || []
 
   useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/login')
+    }
+
     const fetchVehicle = async () => {
       try {
         const res = await fetch(`/api/vehicles/${vehicleId}`)
@@ -67,8 +97,8 @@ export default function EditVehiclePage() {
         const data = await res.json()
         reset(data.vehicle)
       } catch (error) {
-        console.error(error)
-        toast.error('Error fetching vehicle')
+        console.error('Error fetching vehicle:', error)
+        toast.error('Failed to load vehicle data')
       } finally {
         setLoading(false)
       }
@@ -77,10 +107,12 @@ export default function EditVehiclePage() {
     const fetchCategories = async () => {
       try {
         const res = await fetch('/api/category')
+        if (!res.ok) throw new Error('Failed to fetch categories')
         const data = await res.json()
-        setCategories(data.categories)
+        setCategories(data.categories || [])
       } catch (error) {
-        console.error(error)
+        console.error('Error fetching categories:', error)
+        toast.error('Failed to load categories')
       }
     }
 
@@ -88,58 +120,137 @@ export default function EditVehiclePage() {
       fetchVehicle()
       fetchCategories()
     }
-  }, [vehicleId, reset])
+  }, [status, router, vehicleId, reset])
 
   useEffect(() => {
-    // If the user is not authenticated, redirect to login
-    if (status === 'unauthenticated') {
-      router.push('/login')
+    return () => {
+      // Clean up preview URLs when component unmounts
+      previewImages.forEach((url) => URL.revokeObjectURL(url))
     }
-  }, [status, router])
+  }, [previewImages])
 
-  // Show loading state while checking authentication
-  if (status === 'loading') {
-    return (
-      <div className='flex h-screen items-center justify-center'>
-        Loading...
-      </div>
-    )
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files || files.length === 0) return
+
+    // Clean up previous preview URLs
+    previewImages.forEach((url) => URL.revokeObjectURL(url))
+
+    // Create new preview URLs for selected files
+    const newFiles = Array.from(files)
+    setSelectedFiles(newFiles)
+
+    // Generate preview URLs
+    const previews = newFiles.map((file) => URL.createObjectURL(file))
+    setPreviewImages(previews)
   }
 
-  // Only render the dashboard if authenticated
-  if (!session) {
-    return null
+  const removeImage = (index: number) => {
+    const currentImages = [...watchedImages]
+    currentImages.splice(index, 1)
+    setValue('images', currentImages)
+  }
+
+  const removePreviewImage = (index: number) => {
+    // Revoke the URL to prevent memory leaks
+    URL.revokeObjectURL(previewImages[index])
+
+    // Remove from state
+    const newFiles = selectedFiles.filter((_, i) => i !== index)
+    const newPreviews = previewImages.filter((_, i) => i !== index)
+
+    setSelectedFiles(newFiles)
+    setPreviewImages(newPreviews)
+  }
+
+  const getAuthParams = async () => {
+    const res = await fetch('/api/upload-auth')
+    if (!res.ok) throw new Error('Failed to fetch upload authentication')
+    return res.json()
   }
 
   const onSubmit = async (formData: Vehicle) => {
     try {
-      console.log('Submitting vehicle data:', formData) // 👈 Check what's being sent
+      setIsUploading(true)
+
+      // Upload new images if any selected
+      const newUploadedImages: VehicleImage[] = []
+
+      if (selectedFiles.length > 0) {
+        for (const file of selectedFiles) {
+          try {
+            const { token, signature, publicKey, expire } =
+              await getAuthParams()
+            const uniqueFileName = `${uuidv4()}_${file.name}`
+
+            const res = await upload({
+              file,
+              fileName: uniqueFileName,
+              folder: 'inventory',
+              expire,
+              token,
+              signature,
+              publicKey,
+            })
+
+            if (!res || !res.url)
+              throw new Error(`Upload failed for ${file.name}`)
+
+            newUploadedImages.push({ url: res.url })
+          } catch (err) {
+            console.error(err)
+            toast.error(`Failed to upload ${file.name}`)
+          }
+        }
+      }
+
+      // Combine existing images with newly uploaded ones
+      const allImages = [...watchedImages, ...newUploadedImages]
+
+      // Update the formData with all images
+      const updatedFormData = {
+        ...formData,
+        images: allImages,
+      }
 
       const res = await fetch(`/api/vehicles/${vehicleId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(updatedFormData),
       })
 
-      const result = await res.json()
       if (!res.ok) {
-        throw new Error(result?.message || 'Failed to update vehicle')
+        const errorData = await res.json()
+        throw new Error(errorData?.message || 'Failed to update vehicle')
       }
+
+      // Clean up preview URLs
+      previewImages.forEach((url) => URL.revokeObjectURL(url))
 
       toast.success('Vehicle updated successfully')
       router.push('/dashboard/vehicles')
     } catch (error) {
       console.error('PUT request error:', error)
-      toast.error('Failed to update vehicle')
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to update vehicle'
+      )
+    } finally {
+      setIsUploading(false)
     }
   }
 
-  if (loading)
+  if (status === 'loading' || loading) {
     return (
       <div className='flex h-screen items-center justify-center'>
-        Loading...
+        <div className='text-center'>
+          <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mb-4'></div>
+          <p>Loading vehicle data...</p>
+        </div>
       </div>
     )
+  }
+
+  if (!session) return null
 
   return (
     <SidebarProvider>
@@ -413,6 +524,99 @@ export default function EditVehiclePage() {
                   </div>
                 </div>
 
+                {/* Images Section */}
+                <div className='space-y-4'>
+                  <Label>Vehicle Images</Label>
+
+                  {/* Display Current Images */}
+                  {watchedImages.length > 0 && (
+                    <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
+                      {watchedImages.map((img, idx) => (
+                        <div key={idx} className='relative group'>
+                          <div className='aspect-square relative overflow-hidden rounded-lg border'>
+                            <Image
+                              src={img.url || '/placeholder.svg'}
+                              alt={`Vehicle image ${idx + 1}`}
+                              width={200}
+                              height={200}
+                              className='object-cover'
+                            />
+                          </div>
+                          <Button
+                            type='button'
+                            variant='destructive'
+                            size='sm'
+                            className='absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity'
+                            onClick={() => removeImage(idx)}
+                          >
+                            <Trash2 className='h-3 w-3' />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Upload New Images */}
+                  <div className='border-2 border-dashed border-muted-foreground/25 rounded-lg p-6'>
+                    <div className='text-center'>
+                      <Upload className='mx-auto h-12 w-12 text-muted-foreground/50' />
+                      <div className='mt-4'>
+                        <Label htmlFor='imageUpload' className='cursor-pointer'>
+                          <span className='text-sm font-medium text-primary hover:text-primary/80'>
+                            Click to upload images
+                          </span>
+                          <Input
+                            id='imageUpload'
+                            type='file'
+                            accept='image/*'
+                            multiple
+                            className='hidden'
+                            onChange={handleImageUpload}
+                            disabled={uploadingImages || isUploading}
+                          />
+                        </Label>
+                        <p className='text-xs text-muted-foreground mt-1'>
+                          PNG, JPG, GIF up to 10MB each
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Preview Selected Images */}
+                  {previewImages.length > 0 && (
+                    <div className='space-y-2'>
+                      <Label className='text-sm text-muted-foreground'>
+                        New Images (will be uploaded when you save)
+                      </Label>
+                      <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
+                        {previewImages.map((previewUrl, idx) => (
+                          <div key={idx} className='relative group'>
+                            <div className='aspect-square relative overflow-hidden rounded-lg border-2 border-dashed border-primary/50'>
+                              <Image
+                                src={previewUrl || '/placeholder.svg'}
+                                alt={`Preview ${idx + 1}`}
+                                width={200}
+                                height={200}
+                                className='object-cover'
+                              />
+                              <div className='absolute inset-0 bg-primary/10'></div>
+                            </div>
+                            <Button
+                              type='button'
+                              variant='destructive'
+                              size='sm'
+                              className='absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity'
+                              onClick={() => removePreviewImage(idx)}
+                            >
+                              <Trash2 className='h-3 w-3' />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 {/* Description */}
                 <div className='space-y-2'>
                   <label
@@ -437,10 +641,14 @@ export default function EditVehiclePage() {
                 {/* Submit */}
                 <button
                   type='submit'
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || isUploading}
                   className='w-full bg-green-600 hover:bg-green-700 text-white p-4 text-md rounded'
                 >
-                  {isSubmitting ? 'Updating...' : 'Update Vehicle'}
+                  {isSubmitting || isUploading
+                    ? isUploading
+                      ? 'Uploading Images...'
+                      : 'Updating...'
+                    : 'Update Vehicle'}
                 </button>
               </form>
             </div>

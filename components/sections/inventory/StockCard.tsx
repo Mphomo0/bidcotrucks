@@ -111,9 +111,17 @@ export default function StockCard({
             <tbody>
               <tr className='text-gray-900'>
                 <td>{mileage.toLocaleString()} km</td>
-                <td>{fuelType.charAt(0) + fuelType.slice(1).toLowerCase()}</td>
                 <td>
-                  {transmission.charAt(0) + transmission.slice(1).toLowerCase()}
+                  {' '}
+                  {fuelType
+                    ? fuelType.charAt(0) + fuelType.slice(1).toLowerCase()
+                    : '—'}
+                </td>
+                <td>
+                  {transmission
+                    ? transmission.charAt(0) +
+                      transmission.slice(1).toLowerCase()
+                    : '—'}
                 </td>
               </tr>
             </tbody>

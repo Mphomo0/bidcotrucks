@@ -27,24 +27,24 @@ model users {
 }
 
 model inventory {
-  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
   name         String
   make         String
   model        String
   year         Int
   price        Float
-  mileage      Float
-  fuelType     FuelType
+  mileage      Float?
+  fuelType     FuelType?
   condition    Condition
-  transmission Transmission
+  transmission Transmission?
   images       Json
   status       Status
   description  String
-  slug         String       @unique
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  categoryId   String       @db.ObjectId
-  category     category     @relation(fields: [categoryId], references: [id])
+  slug         String        @unique
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  categoryId   String        @db.ObjectId
+  category     category      @relation(fields: [categoryId], references: [id])
 }
 
 enum FuelType {

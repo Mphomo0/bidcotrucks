@@ -18,6 +18,7 @@ import { toast } from 'react-toastify'
 import UploadMultiple from '@/components/sections/dashboard/UploadMultiple'
 import { upload } from '@imagekit/next'
 import { v4 as uuidv4 } from 'uuid'
+import { useRouter } from 'next/navigation'
 
 // Updated schema to expect array of objects
 const addVehicleSchema = z.object({
@@ -26,10 +27,10 @@ const addVehicleSchema = z.object({
   model: z.string().min(2, { message: 'Model is required' }),
   year: z.coerce.number().min(1900, { message: 'Enter a valid year' }),
   price: z.coerce.number().min(1),
-  mileage: z.coerce.number().min(0),
-  fuelType: z.string().min(3),
+  mileage: z.coerce.number().min(0).optional(),
+  fuelType: z.string().min(3).optional(),
   condition: z.string().min(3),
-  transmission: z.string().min(3),
+  transmission: z.string().min(3).optional(),
   status: z.string().min(3),
   description: z.string().min(3),
   categoryId: z.string().min(3),
@@ -52,19 +53,26 @@ interface Category {
 
 export default function CreateVehicle() {
   const [categories, setCategories] = useState<Category[]>([])
-  const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null)
+  const [selectedFiles, setSelectedFiles] = useState<File[] | null>(null)
   const [isUploading, setIsUploading] = useState(false)
 
   const {
     register,
     handleSubmit,
     setValue,
-    reset,
     control,
     formState: { errors, isSubmitting },
   } = useForm<AddVehicleForm>({
     resolver: zodResolver(addVehicleSchema),
+    defaultValues: {
+      fuelType: undefined,
+      transmission: undefined,
+      mileage: undefined,
+      images: [],
+    },
   })
+
+  const router = useRouter()
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -131,9 +139,9 @@ export default function CreateVehicle() {
       const payload = {
         ...data,
         images: uploadedImages,
-        fuelType: data.fuelType.toUpperCase(),
+        fuelType: data.fuelType?.toUpperCase() ?? null,
         condition: data.condition.toUpperCase(),
-        transmission: data.transmission.toUpperCase(),
+        transmission: data.transmission?.toUpperCase() ?? null,
         status: data.status.toUpperCase(),
       }
 
@@ -145,8 +153,8 @@ export default function CreateVehicle() {
 
       if (res.ok) {
         toast.success('Vehicle created successfully!')
-        reset()
         setSelectedFiles(null)
+        router.push('/dashboard/vehicles')
       } else {
         const err = await res.json()
         toast.error(err.error || 'Failed to create vehicle')

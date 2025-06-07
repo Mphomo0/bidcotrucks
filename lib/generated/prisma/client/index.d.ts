@@ -3288,10 +3288,10 @@ export namespace Prisma {
     model: string
     year: number
     price: number
-    mileage: number
-    fuelType: $Enums.FuelType
+    mileage: number | null
+    fuelType: $Enums.FuelType | null
     condition: $Enums.Condition
-    transmission: $Enums.Transmission
+    transmission: $Enums.Transmission | null
     images: JsonValue
     status: $Enums.Status
     description: string
@@ -3380,10 +3380,10 @@ export namespace Prisma {
       model: string
       year: number
       price: number
-      mileage: number
-      fuelType: $Enums.FuelType
+      mileage: number | null
+      fuelType: $Enums.FuelType | null
       condition: $Enums.Condition
-      transmission: $Enums.Transmission
+      transmission: $Enums.Transmission | null
       images: Prisma.JsonValue
       status: $Enums.Status
       description: string
@@ -4504,10 +4504,10 @@ export namespace Prisma {
     model?: StringFilter<"inventory"> | string
     year?: IntFilter<"inventory"> | number
     price?: FloatFilter<"inventory"> | number
-    mileage?: FloatFilter<"inventory"> | number
-    fuelType?: EnumFuelTypeFilter<"inventory"> | $Enums.FuelType
+    mileage?: FloatNullableFilter<"inventory"> | number | null
+    fuelType?: EnumFuelTypeNullableFilter<"inventory"> | $Enums.FuelType | null
     condition?: EnumConditionFilter<"inventory"> | $Enums.Condition
-    transmission?: EnumTransmissionFilter<"inventory"> | $Enums.Transmission
+    transmission?: EnumTransmissionNullableFilter<"inventory"> | $Enums.Transmission | null
     images?: JsonFilter<"inventory">
     status?: EnumStatusFilter<"inventory"> | $Enums.Status
     description?: StringFilter<"inventory"> | string
@@ -4550,10 +4550,10 @@ export namespace Prisma {
     model?: StringFilter<"inventory"> | string
     year?: IntFilter<"inventory"> | number
     price?: FloatFilter<"inventory"> | number
-    mileage?: FloatFilter<"inventory"> | number
-    fuelType?: EnumFuelTypeFilter<"inventory"> | $Enums.FuelType
+    mileage?: FloatNullableFilter<"inventory"> | number | null
+    fuelType?: EnumFuelTypeNullableFilter<"inventory"> | $Enums.FuelType | null
     condition?: EnumConditionFilter<"inventory"> | $Enums.Condition
-    transmission?: EnumTransmissionFilter<"inventory"> | $Enums.Transmission
+    transmission?: EnumTransmissionNullableFilter<"inventory"> | $Enums.Transmission | null
     images?: JsonFilter<"inventory">
     status?: EnumStatusFilter<"inventory"> | $Enums.Status
     description?: StringFilter<"inventory"> | string
@@ -4598,10 +4598,10 @@ export namespace Prisma {
     model?: StringWithAggregatesFilter<"inventory"> | string
     year?: IntWithAggregatesFilter<"inventory"> | number
     price?: FloatWithAggregatesFilter<"inventory"> | number
-    mileage?: FloatWithAggregatesFilter<"inventory"> | number
-    fuelType?: EnumFuelTypeWithAggregatesFilter<"inventory"> | $Enums.FuelType
+    mileage?: FloatNullableWithAggregatesFilter<"inventory"> | number | null
+    fuelType?: EnumFuelTypeNullableWithAggregatesFilter<"inventory"> | $Enums.FuelType | null
     condition?: EnumConditionWithAggregatesFilter<"inventory"> | $Enums.Condition
-    transmission?: EnumTransmissionWithAggregatesFilter<"inventory"> | $Enums.Transmission
+    transmission?: EnumTransmissionNullableWithAggregatesFilter<"inventory"> | $Enums.Transmission | null
     images?: JsonWithAggregatesFilter<"inventory">
     status?: EnumStatusWithAggregatesFilter<"inventory"> | $Enums.Status
     description?: StringWithAggregatesFilter<"inventory"> | string
@@ -4733,10 +4733,10 @@ export namespace Prisma {
     model: string
     year: number
     price: number
-    mileage: number
-    fuelType: $Enums.FuelType
+    mileage?: number | null
+    fuelType?: $Enums.FuelType | null
     condition: $Enums.Condition
-    transmission: $Enums.Transmission
+    transmission?: $Enums.Transmission | null
     images: InputJsonValue
     status: $Enums.Status
     description: string
@@ -4753,10 +4753,10 @@ export namespace Prisma {
     model: string
     year: number
     price: number
-    mileage: number
-    fuelType: $Enums.FuelType
+    mileage?: number | null
+    fuelType?: $Enums.FuelType | null
     condition: $Enums.Condition
-    transmission: $Enums.Transmission
+    transmission?: $Enums.Transmission | null
     images: InputJsonValue
     status: $Enums.Status
     description: string
@@ -4772,10 +4772,10 @@ export namespace Prisma {
     model?: StringFieldUpdateOperationsInput | string
     year?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
-    mileage?: FloatFieldUpdateOperationsInput | number
-    fuelType?: EnumFuelTypeFieldUpdateOperationsInput | $Enums.FuelType
+    mileage?: NullableFloatFieldUpdateOperationsInput | number | null
+    fuelType?: NullableEnumFuelTypeFieldUpdateOperationsInput | $Enums.FuelType | null
     condition?: EnumConditionFieldUpdateOperationsInput | $Enums.Condition
-    transmission?: EnumTransmissionFieldUpdateOperationsInput | $Enums.Transmission
+    transmission?: NullableEnumTransmissionFieldUpdateOperationsInput | $Enums.Transmission | null
     images?: InputJsonValue | InputJsonValue
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     description?: StringFieldUpdateOperationsInput | string
@@ -4791,10 +4791,10 @@ export namespace Prisma {
     model?: StringFieldUpdateOperationsInput | string
     year?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
-    mileage?: FloatFieldUpdateOperationsInput | number
-    fuelType?: EnumFuelTypeFieldUpdateOperationsInput | $Enums.FuelType
+    mileage?: NullableFloatFieldUpdateOperationsInput | number | null
+    fuelType?: NullableEnumFuelTypeFieldUpdateOperationsInput | $Enums.FuelType | null
     condition?: EnumConditionFieldUpdateOperationsInput | $Enums.Condition
-    transmission?: EnumTransmissionFieldUpdateOperationsInput | $Enums.Transmission
+    transmission?: NullableEnumTransmissionFieldUpdateOperationsInput | $Enums.Transmission | null
     images?: InputJsonValue | InputJsonValue
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     description?: StringFieldUpdateOperationsInput | string
@@ -4811,10 +4811,10 @@ export namespace Prisma {
     model: string
     year: number
     price: number
-    mileage: number
-    fuelType: $Enums.FuelType
+    mileage?: number | null
+    fuelType?: $Enums.FuelType | null
     condition: $Enums.Condition
-    transmission: $Enums.Transmission
+    transmission?: $Enums.Transmission | null
     images: InputJsonValue
     status: $Enums.Status
     description: string
@@ -4830,10 +4830,10 @@ export namespace Prisma {
     model?: StringFieldUpdateOperationsInput | string
     year?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
-    mileage?: FloatFieldUpdateOperationsInput | number
-    fuelType?: EnumFuelTypeFieldUpdateOperationsInput | $Enums.FuelType
+    mileage?: NullableFloatFieldUpdateOperationsInput | number | null
+    fuelType?: NullableEnumFuelTypeFieldUpdateOperationsInput | $Enums.FuelType | null
     condition?: EnumConditionFieldUpdateOperationsInput | $Enums.Condition
-    transmission?: EnumTransmissionFieldUpdateOperationsInput | $Enums.Transmission
+    transmission?: NullableEnumTransmissionFieldUpdateOperationsInput | $Enums.Transmission | null
     images?: InputJsonValue | InputJsonValue
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     description?: StringFieldUpdateOperationsInput | string
@@ -4848,10 +4848,10 @@ export namespace Prisma {
     model?: StringFieldUpdateOperationsInput | string
     year?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
-    mileage?: FloatFieldUpdateOperationsInput | number
-    fuelType?: EnumFuelTypeFieldUpdateOperationsInput | $Enums.FuelType
+    mileage?: NullableFloatFieldUpdateOperationsInput | number | null
+    fuelType?: NullableEnumFuelTypeFieldUpdateOperationsInput | $Enums.FuelType | null
     condition?: EnumConditionFieldUpdateOperationsInput | $Enums.Condition
-    transmission?: EnumTransmissionFieldUpdateOperationsInput | $Enums.Transmission
+    transmission?: NullableEnumTransmissionFieldUpdateOperationsInput | $Enums.Transmission | null
     images?: InputJsonValue | InputJsonValue
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     description?: StringFieldUpdateOperationsInput | string
@@ -5002,11 +5002,24 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
-  export type EnumFuelTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.FuelType | EnumFuelTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.FuelType[] | ListEnumFuelTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.FuelType[] | ListEnumFuelTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumFuelTypeFilter<$PrismaModel> | $Enums.FuelType
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+    isSet?: boolean
+  }
+
+  export type EnumFuelTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.FuelType | EnumFuelTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FuelType[] | ListEnumFuelTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FuelType[] | ListEnumFuelTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFuelTypeNullableFilter<$PrismaModel> | $Enums.FuelType | null
+    isSet?: boolean
   }
 
   export type EnumConditionFilter<$PrismaModel = never> = {
@@ -5016,11 +5029,12 @@ export namespace Prisma {
     not?: NestedEnumConditionFilter<$PrismaModel> | $Enums.Condition
   }
 
-  export type EnumTransmissionFilter<$PrismaModel = never> = {
-    equals?: $Enums.Transmission | EnumTransmissionFieldRefInput<$PrismaModel>
-    in?: $Enums.Transmission[] | ListEnumTransmissionFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Transmission[] | ListEnumTransmissionFieldRefInput<$PrismaModel>
-    not?: NestedEnumTransmissionFilter<$PrismaModel> | $Enums.Transmission
+  export type EnumTransmissionNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.Transmission | EnumTransmissionFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Transmission[] | ListEnumTransmissionFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Transmission[] | ListEnumTransmissionFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumTransmissionNullableFilter<$PrismaModel> | $Enums.Transmission | null
+    isSet?: boolean
   }
   export type JsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -5148,14 +5162,32 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
-  export type EnumFuelTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.FuelType | EnumFuelTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.FuelType[] | ListEnumFuelTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.FuelType[] | ListEnumFuelTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumFuelTypeWithAggregatesFilter<$PrismaModel> | $Enums.FuelType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumFuelTypeFilter<$PrismaModel>
-    _max?: NestedEnumFuelTypeFilter<$PrismaModel>
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+    isSet?: boolean
+  }
+
+  export type EnumFuelTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FuelType | EnumFuelTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FuelType[] | ListEnumFuelTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FuelType[] | ListEnumFuelTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFuelTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.FuelType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumFuelTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumFuelTypeNullableFilter<$PrismaModel>
+    isSet?: boolean
   }
 
   export type EnumConditionWithAggregatesFilter<$PrismaModel = never> = {
@@ -5168,14 +5200,15 @@ export namespace Prisma {
     _max?: NestedEnumConditionFilter<$PrismaModel>
   }
 
-  export type EnumTransmissionWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.Transmission | EnumTransmissionFieldRefInput<$PrismaModel>
-    in?: $Enums.Transmission[] | ListEnumTransmissionFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Transmission[] | ListEnumTransmissionFieldRefInput<$PrismaModel>
-    not?: NestedEnumTransmissionWithAggregatesFilter<$PrismaModel> | $Enums.Transmission
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumTransmissionFilter<$PrismaModel>
-    _max?: NestedEnumTransmissionFilter<$PrismaModel>
+  export type EnumTransmissionNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Transmission | EnumTransmissionFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Transmission[] | ListEnumTransmissionFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Transmission[] | ListEnumTransmissionFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumTransmissionNullableWithAggregatesFilter<$PrismaModel> | $Enums.Transmission | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumTransmissionNullableFilter<$PrismaModel>
+    _max?: NestedEnumTransmissionNullableFilter<$PrismaModel>
+    isSet?: boolean
   }
   export type JsonWithAggregatesFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -5274,16 +5307,27 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type EnumFuelTypeFieldUpdateOperationsInput = {
-    set?: $Enums.FuelType
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+    unset?: boolean
+  }
+
+  export type NullableEnumFuelTypeFieldUpdateOperationsInput = {
+    set?: $Enums.FuelType | null
+    unset?: boolean
   }
 
   export type EnumConditionFieldUpdateOperationsInput = {
     set?: $Enums.Condition
   }
 
-  export type EnumTransmissionFieldUpdateOperationsInput = {
-    set?: $Enums.Transmission
+  export type NullableEnumTransmissionFieldUpdateOperationsInput = {
+    set?: $Enums.Transmission | null
+    unset?: boolean
   }
 
   export type EnumStatusFieldUpdateOperationsInput = {
@@ -5376,11 +5420,24 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
-  export type NestedEnumFuelTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.FuelType | EnumFuelTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.FuelType[] | ListEnumFuelTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.FuelType[] | ListEnumFuelTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumFuelTypeFilter<$PrismaModel> | $Enums.FuelType
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+    isSet?: boolean
+  }
+
+  export type NestedEnumFuelTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.FuelType | EnumFuelTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FuelType[] | ListEnumFuelTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FuelType[] | ListEnumFuelTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFuelTypeNullableFilter<$PrismaModel> | $Enums.FuelType | null
+    isSet?: boolean
   }
 
   export type NestedEnumConditionFilter<$PrismaModel = never> = {
@@ -5390,11 +5447,12 @@ export namespace Prisma {
     not?: NestedEnumConditionFilter<$PrismaModel> | $Enums.Condition
   }
 
-  export type NestedEnumTransmissionFilter<$PrismaModel = never> = {
-    equals?: $Enums.Transmission | EnumTransmissionFieldRefInput<$PrismaModel>
-    in?: $Enums.Transmission[] | ListEnumTransmissionFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Transmission[] | ListEnumTransmissionFieldRefInput<$PrismaModel>
-    not?: NestedEnumTransmissionFilter<$PrismaModel> | $Enums.Transmission
+  export type NestedEnumTransmissionNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.Transmission | EnumTransmissionFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Transmission[] | ListEnumTransmissionFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Transmission[] | ListEnumTransmissionFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumTransmissionNullableFilter<$PrismaModel> | $Enums.Transmission | null
+    isSet?: boolean
   }
 
   export type NestedEnumStatusFilter<$PrismaModel = never> = {
@@ -5436,14 +5494,44 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
-  export type NestedEnumFuelTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.FuelType | EnumFuelTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.FuelType[] | ListEnumFuelTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.FuelType[] | ListEnumFuelTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumFuelTypeWithAggregatesFilter<$PrismaModel> | $Enums.FuelType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumFuelTypeFilter<$PrismaModel>
-    _max?: NestedEnumFuelTypeFilter<$PrismaModel>
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+    isSet?: boolean
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+    isSet?: boolean
+  }
+
+  export type NestedEnumFuelTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FuelType | EnumFuelTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FuelType[] | ListEnumFuelTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FuelType[] | ListEnumFuelTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFuelTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.FuelType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumFuelTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumFuelTypeNullableFilter<$PrismaModel>
+    isSet?: boolean
   }
 
   export type NestedEnumConditionWithAggregatesFilter<$PrismaModel = never> = {
@@ -5456,14 +5544,15 @@ export namespace Prisma {
     _max?: NestedEnumConditionFilter<$PrismaModel>
   }
 
-  export type NestedEnumTransmissionWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.Transmission | EnumTransmissionFieldRefInput<$PrismaModel>
-    in?: $Enums.Transmission[] | ListEnumTransmissionFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Transmission[] | ListEnumTransmissionFieldRefInput<$PrismaModel>
-    not?: NestedEnumTransmissionWithAggregatesFilter<$PrismaModel> | $Enums.Transmission
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumTransmissionFilter<$PrismaModel>
-    _max?: NestedEnumTransmissionFilter<$PrismaModel>
+  export type NestedEnumTransmissionNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Transmission | EnumTransmissionFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Transmission[] | ListEnumTransmissionFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Transmission[] | ListEnumTransmissionFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumTransmissionNullableWithAggregatesFilter<$PrismaModel> | $Enums.Transmission | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumTransmissionNullableFilter<$PrismaModel>
+    _max?: NestedEnumTransmissionNullableFilter<$PrismaModel>
+    isSet?: boolean
   }
   export type NestedJsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -5494,10 +5583,10 @@ export namespace Prisma {
     model: string
     year: number
     price: number
-    mileage: number
-    fuelType: $Enums.FuelType
+    mileage?: number | null
+    fuelType?: $Enums.FuelType | null
     condition: $Enums.Condition
-    transmission: $Enums.Transmission
+    transmission?: $Enums.Transmission | null
     images: InputJsonValue
     status: $Enums.Status
     description: string
@@ -5513,10 +5602,10 @@ export namespace Prisma {
     model: string
     year: number
     price: number
-    mileage: number
-    fuelType: $Enums.FuelType
+    mileage?: number | null
+    fuelType?: $Enums.FuelType | null
     condition: $Enums.Condition
-    transmission: $Enums.Transmission
+    transmission?: $Enums.Transmission | null
     images: InputJsonValue
     status: $Enums.Status
     description: string
@@ -5560,10 +5649,10 @@ export namespace Prisma {
     model?: StringFilter<"inventory"> | string
     year?: IntFilter<"inventory"> | number
     price?: FloatFilter<"inventory"> | number
-    mileage?: FloatFilter<"inventory"> | number
-    fuelType?: EnumFuelTypeFilter<"inventory"> | $Enums.FuelType
+    mileage?: FloatNullableFilter<"inventory"> | number | null
+    fuelType?: EnumFuelTypeNullableFilter<"inventory"> | $Enums.FuelType | null
     condition?: EnumConditionFilter<"inventory"> | $Enums.Condition
-    transmission?: EnumTransmissionFilter<"inventory"> | $Enums.Transmission
+    transmission?: EnumTransmissionNullableFilter<"inventory"> | $Enums.Transmission | null
     images?: JsonFilter<"inventory">
     status?: EnumStatusFilter<"inventory"> | $Enums.Status
     description?: StringFilter<"inventory"> | string
@@ -5622,10 +5711,10 @@ export namespace Prisma {
     model: string
     year: number
     price: number
-    mileage: number
-    fuelType: $Enums.FuelType
+    mileage?: number | null
+    fuelType?: $Enums.FuelType | null
     condition: $Enums.Condition
-    transmission: $Enums.Transmission
+    transmission?: $Enums.Transmission | null
     images: InputJsonValue
     status: $Enums.Status
     description: string
@@ -5640,10 +5729,10 @@ export namespace Prisma {
     model?: StringFieldUpdateOperationsInput | string
     year?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
-    mileage?: FloatFieldUpdateOperationsInput | number
-    fuelType?: EnumFuelTypeFieldUpdateOperationsInput | $Enums.FuelType
+    mileage?: NullableFloatFieldUpdateOperationsInput | number | null
+    fuelType?: NullableEnumFuelTypeFieldUpdateOperationsInput | $Enums.FuelType | null
     condition?: EnumConditionFieldUpdateOperationsInput | $Enums.Condition
-    transmission?: EnumTransmissionFieldUpdateOperationsInput | $Enums.Transmission
+    transmission?: NullableEnumTransmissionFieldUpdateOperationsInput | $Enums.Transmission | null
     images?: InputJsonValue | InputJsonValue
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     description?: StringFieldUpdateOperationsInput | string
@@ -5658,10 +5747,10 @@ export namespace Prisma {
     model?: StringFieldUpdateOperationsInput | string
     year?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
-    mileage?: FloatFieldUpdateOperationsInput | number
-    fuelType?: EnumFuelTypeFieldUpdateOperationsInput | $Enums.FuelType
+    mileage?: NullableFloatFieldUpdateOperationsInput | number | null
+    fuelType?: NullableEnumFuelTypeFieldUpdateOperationsInput | $Enums.FuelType | null
     condition?: EnumConditionFieldUpdateOperationsInput | $Enums.Condition
-    transmission?: EnumTransmissionFieldUpdateOperationsInput | $Enums.Transmission
+    transmission?: NullableEnumTransmissionFieldUpdateOperationsInput | $Enums.Transmission | null
     images?: InputJsonValue | InputJsonValue
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     description?: StringFieldUpdateOperationsInput | string
@@ -5676,10 +5765,10 @@ export namespace Prisma {
     model?: StringFieldUpdateOperationsInput | string
     year?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
-    mileage?: FloatFieldUpdateOperationsInput | number
-    fuelType?: EnumFuelTypeFieldUpdateOperationsInput | $Enums.FuelType
+    mileage?: NullableFloatFieldUpdateOperationsInput | number | null
+    fuelType?: NullableEnumFuelTypeFieldUpdateOperationsInput | $Enums.FuelType | null
     condition?: EnumConditionFieldUpdateOperationsInput | $Enums.Condition
-    transmission?: EnumTransmissionFieldUpdateOperationsInput | $Enums.Transmission
+    transmission?: NullableEnumTransmissionFieldUpdateOperationsInput | $Enums.Transmission | null
     images?: InputJsonValue | InputJsonValue
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     description?: StringFieldUpdateOperationsInput | string

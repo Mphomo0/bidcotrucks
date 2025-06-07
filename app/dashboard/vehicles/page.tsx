@@ -74,7 +74,7 @@ export default function Vehicles() {
       if (!res.ok) throw new Error('Failed to fetch vehicles')
 
       const response = await res.json()
-      console.log(response.data)
+
       setVehicles(Array.isArray(response.data) ? response.data : [])
       setPaginationMeta(response.meta)
     } catch (error) {
@@ -235,7 +235,7 @@ export default function Vehicles() {
                       <TableCell>{vehicle.id}</TableCell>
                       <TableCell>
                         <Image
-                          src={vehicle.images[0].url || '/placeholder.svg'}
+                          src={vehicle.images[0]?.url}
                           alt={vehicle.name}
                           width={100}
                           height={100}

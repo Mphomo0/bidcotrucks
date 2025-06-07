@@ -72,6 +72,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             alt='Logo'
             width={100}
             height={100}
+            priority
           />
         </Link>
       </SidebarHeader>

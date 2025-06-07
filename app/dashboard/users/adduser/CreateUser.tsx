@@ -82,6 +82,7 @@ function CreateUser() {
               {...register('name')}
               placeholder='Enter Your Name'
               className='border border-black bg-white w-full p-6'
+              autoComplete='off'
             />
             {errors.name && (
               <p className='text-red-500 text-sm'>{errors.name.message}</p>
@@ -98,6 +99,7 @@ function CreateUser() {
               {...register('email')}
               placeholder='Enter email'
               className='border border-black bg-white w-full p-6'
+              autoComplete='off'
             />
             {errors.email && (
               <p className='text-red-500 text-sm'>{errors.email.message}</p>
@@ -124,7 +126,9 @@ function CreateUser() {
             <label htmlFor='role' className='text-sm font-medium'>
               Role
             </label>
+
             <Select
+              name='role'
               onValueChange={(value) =>
                 setValue('role', value as 'super-admin' | 'admin')
               }

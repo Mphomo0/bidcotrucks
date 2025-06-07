@@ -33,10 +33,10 @@ model inventory {
   model        String
   year         Int
   price        Float
-  mileage      Float
-  fuelType     FuelType
+  mileage      Float?
+  fuelType     FuelType?
   condition    Condition
-  transmission Transmission
+  transmission Transmission?
   images       Json 
   status       Status
   description  String
