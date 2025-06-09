@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { toast } from 'react-toastify'
 
+// Schema without direct image validation
 const tradeInFormSchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
   email: z.string().email({ message: 'Invalid email address' }),
@@ -18,15 +19,14 @@ const tradeInFormSchema = z.object({
   mileage: z.string().min(1, { message: 'Mileage is required' }),
   price: z.string().min(1, { message: 'Price range is required' }),
   description: z.string().optional(),
-  tradeImages: z
-    .any()
-    .refine((files) => files?.length > 0, { message: 'Image is required' }),
   comments: z.string().optional(),
 })
 
 type TradeInFormData = z.infer<typeof tradeInFormSchema>
 
 export default function TradeInForm() {
+  const [selectedImages, setSelectedImages] = React.useState<File[]>([])
+
   const {
     register,
     handleSubmit,
@@ -36,23 +36,23 @@ export default function TradeInForm() {
     resolver: zodResolver(tradeInFormSchema),
   })
 
-  // Handle form submission
   const onSubmit = async (data: TradeInFormData) => {
-    const formData = new FormData()
-
-    // Append all form fields
-    for (const [key, value] of Object.entries(data)) {
-      if (key === 'tradeImages') {
-        const files = value as FileList
-        Array.from(files).forEach((file) => {
-          formData.append('tradeImages', file)
-        })
-      } else {
-        formData.append(key, value as string)
-      }
+    if (selectedImages.length === 0) {
+      toast.error('At least one image is required.')
+      return
     }
 
-    console.log('Form data:', formData)
+    const formData = new FormData()
+
+    // Append all form fields except images
+    for (const [key, value] of Object.entries(data)) {
+      formData.append(key, value as string)
+    }
+
+    // Append images
+    selectedImages.forEach((file) => {
+      formData.append('tradeImages', file)
+    })
 
     try {
       const response = await fetch('/api/send-email/trade-in', {
@@ -65,6 +65,7 @@ export default function TradeInForm() {
       if (response.ok) {
         toast.success('Message sent successfully!')
         reset()
+        setSelectedImages([])
       } else {
         toast.error(result.message || 'Something went wrong')
       }
@@ -81,7 +82,7 @@ export default function TradeInForm() {
           <h2 className='font-bold text-4xl text-center mb-6'>
             Personal Details
           </h2>
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-6'>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-6'>
             {/* Name Field */}
             <div>
               <label
@@ -93,9 +94,9 @@ export default function TradeInForm() {
               <input
                 id='name'
                 type='text'
+                {...register('name')}
                 className='w-full p-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
                 placeholder='Enter your name'
-                {...register('name')}
               />
               {errors.name && (
                 <p className='text-red-500 text-sm mt-1'>
@@ -115,9 +116,9 @@ export default function TradeInForm() {
               <input
                 id='email'
                 type='email'
+                {...register('email')}
                 className='w-full p-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
                 placeholder='Enter your email'
-                {...register('email')}
               />
               {errors.email && (
                 <p className='text-red-500 text-sm mt-1'>
@@ -127,8 +128,8 @@ export default function TradeInForm() {
             </div>
           </div>
 
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6'>
-            {/* Cellphone (Main) Field */}
+          {/* Contact Info */}
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-6'>
             <div>
               <label
                 htmlFor='cellphone'
@@ -150,16 +151,15 @@ export default function TradeInForm() {
               )}
             </div>
 
-            {/* Alternative Number Field */}
             <div>
               <label
-                htmlFor='alt-number'
+                htmlFor='altNumber'
                 className='block font-semibold text-lg mb-2'
               >
                 Alternative Number
               </label>
               <input
-                id='alt-number'
+                id='altNumber'
                 type='tel'
                 {...register('altNumber')}
                 className='w-full p-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
@@ -172,7 +172,6 @@ export default function TradeInForm() {
               )}
             </div>
 
-            {/* Town/Suburb Field */}
             <div>
               <label
                 htmlFor='town'
@@ -199,8 +198,7 @@ export default function TradeInForm() {
             Vehicle Details
           </h2>
 
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-6'>
-            {/* Make Field */}
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-6'>
             <div>
               <label
                 htmlFor='make'
@@ -222,7 +220,6 @@ export default function TradeInForm() {
               )}
             </div>
 
-            {/* model Field */}
             <div>
               <label
                 htmlFor='model'
@@ -244,7 +241,6 @@ export default function TradeInForm() {
               )}
             </div>
 
-            {/* year Field */}
             <div>
               <label
                 htmlFor='year'
@@ -266,7 +262,6 @@ export default function TradeInForm() {
               )}
             </div>
 
-            {/* Mileage Field */}
             <div>
               <label
                 htmlFor='mileage'
@@ -279,7 +274,7 @@ export default function TradeInForm() {
                 type='text'
                 {...register('mileage')}
                 className='w-full p-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
-                placeholder='Enter Vehicle Mileage '
+                placeholder='Enter Vehicle Mileage'
               />
               {errors.mileage && (
                 <p className='text-red-500 text-sm mt-1'>
@@ -289,8 +284,8 @@ export default function TradeInForm() {
             </div>
           </div>
 
-          <div className='grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4 mb-6'>
-            {/* Price Field */}
+          {/* Price and Description */}
+          <div className='grid grid-cols-1 gap-4 mb-6'>
             <div>
               <label
                 htmlFor='price'
@@ -312,7 +307,6 @@ export default function TradeInForm() {
               )}
             </div>
 
-            {/* Description Field */}
             <div>
               <label
                 htmlFor='description'
@@ -322,19 +316,14 @@ export default function TradeInForm() {
               </label>
               <textarea
                 id='description'
-                rows={8}
+                rows={6}
                 {...register('description')}
                 className='w-full p-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
-                placeholder='Vehicle Description.....'
+                placeholder='Vehicle Description...'
               />
-              {errors.description && (
-                <p className='text-red-500 text-sm mt-1'>
-                  {errors.description.message}
-                </p>
-              )}
             </div>
 
-            {/* Trade in Images Field */}
+            {/* Image Upload */}
             <div>
               <label
                 htmlFor='tradeImages'
@@ -346,13 +335,24 @@ export default function TradeInForm() {
                 id='tradeImages'
                 type='file'
                 multiple
-                {...register('tradeImages')}
+                onChange={(e) => {
+                  const files = e.target.files
+                  if (files) {
+                    setSelectedImages((prev) => [...prev, ...Array.from(files)])
+                  }
+                }}
                 className='w-full p-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
-                placeholder='Vehicle Description'
               />
+              <div className='mt-2'>
+                {selectedImages.map((file, idx) => (
+                  <p key={idx} className='text-sm text-gray-700'>
+                    {file.name}
+                  </p>
+                ))}
+              </div>
             </div>
 
-            {/* Comments Field */}
+            {/* Comments */}
             <div>
               <label
                 htmlFor='comments'
@@ -367,19 +367,13 @@ export default function TradeInForm() {
                 className='w-full p-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
                 placeholder='Additional comments...'
               />
-              {errors.comments && (
-                <p className='text-red-500 text-sm mt-1'>
-                  {errors.comments.message}
-                </p>
-              )}
             </div>
           </div>
 
-          {/* Submit Button */}
           <div className='mb-36'>
             <button
               type='submit'
-              className='bg-[#24603a] text-white font-bold py-3 px-6 rounded uppercase w-full md:w-1/6 lg:w-1/6'
+              className='bg-[#24603a] text-white font-bold py-3 px-6 rounded uppercase w-full md:w-1/6'
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Submitting...' : 'Submit'}
