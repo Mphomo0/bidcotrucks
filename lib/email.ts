@@ -24,7 +24,7 @@ interface SendMailParams {
 export async function sendMail({
   subject,
   html,
-  to = 'testmail@nostalgic-studio.co.za', // default recipient
+  to = 'admin@bidco.co.za', // default recipient
   attachments = [],
 }: SendMailParams) {
   // Validate credentials are provided
