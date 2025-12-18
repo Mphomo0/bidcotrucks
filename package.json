@@ -29,13 +29,13 @@
     "clsx": "^2.1.1",
     "keen-slider": "^6.8.6",
     "lucide-react": "^0.479.0",
-    "next": "^15.5.7",
+    "next": "15.5.9",
     "next-auth": "^5.0.0-beta.25",
     "nodemailer": "^6.10.1",
     "posthog-js": "^1.246.0",
-    "react": "^19.2.1",
+    "react": "19.2.3",
     "react-countup": "^6.5.3",
-    "react-dom": "^19.2.1",
+    "react-dom": "19.2.3",
     "react-hook-form": "^7.54.2",
     "react-icons": "^5.5.0",
     "react-toastify": "^11.0.5",
@@ -51,13 +51,17 @@
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/nodemailer": "^6.4.17",
-    "@types/react": "^19",
+    "@types/react": "19.2.7",
     "@types/react-countup": "^4.3.0",
-    "@types/react-dom": "^19",
+    "@types/react-dom": "19.2.3",
     "eslint": "^9",
-    "eslint-config-next": "15.2.1",
+    "eslint-config-next": "15.5.9",
     "prisma": "^6.7.0",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "overrides": {
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3"
   }
 }
