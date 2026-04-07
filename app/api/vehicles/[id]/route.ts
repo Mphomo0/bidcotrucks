@@ -69,7 +69,7 @@ export const DELETE = auth(async (req, { params }) => {
   }
 })
 
-// PUT /api/vehicles/:id - Update a vehicle by ID
+// PATCH /api/vehicles/:id - Update a vehicle by ID
 // export const PUT = auth(async (req, { params }) => {
 //   const id = (await params).id
 
@@ -152,15 +152,22 @@ interface UpdateVehicleBody {
   categoryId: string
 }
 
-export const PUT = auth(async (req, { params }) => {
+export const PATCH = auth(async (req, { params }) => {
   const id = (await params).id
 
   if (!req.auth) {
+    console.log('Unauthorized - no auth session')
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   try {
-    const body: UpdateVehicleBody = await req.json()
+    let body: UpdateVehicleBody
+    try {
+      body = await req.json()
+    } catch (parseError) {
+      console.error('Failed to parse request body:', parseError)
+      return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
+    }
 
     // Ensure the vehicle exists first (for checking old name/slug)
     const existingVehicle = await prisma.inventory.findUnique({
@@ -172,13 +179,22 @@ export const PUT = auth(async (req, { params }) => {
     }
 
     // Generate new slug only if name has changed
-    const slug =
-      body.name !== existingVehicle.name
-        ? body.name
-            .toLowerCase()
-            .replace(/\s+/g, '-')
-            .replace(/[^\w-]+/g, '')
-        : existingVehicle.slug
+    let slug: string
+    if (body.name !== existingVehicle.name) {
+      const baseSlug = body.name
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^\w-]+/g, '')
+      
+      // Check if slug already exists, if so make it unique
+      slug = baseSlug
+      let counter = 1
+      while (await prisma.inventory.findUnique({ where: { slug } })) {
+        slug = `${baseSlug}-${counter++}`
+      }
+    } else {
+      slug = existingVehicle.slug
+    }
 
     // Validate category exists
     const categoryExists = await prisma.category.findUnique({
@@ -233,15 +249,32 @@ export const PUT = auth(async (req, { params }) => {
   } catch (error) {
     console.error('Error updating vehicle:', error)
 
-    if (
-      error instanceof Error &&
-      error.message.includes('Record to update does not exist')
-    ) {
-      return NextResponse.json({ error: 'Vehicle not found' }, { status: 404 })
+    // Check for Prisma-specific errors
+    if (error instanceof Error) {
+      console.error('Error details:', error.message)
+      // Handle unique constraint violation (slug)
+      if (error.message.includes('Unique constraint')) {
+        return NextResponse.json(
+          { error: 'A vehicle with similar details already exists. Please use a different name.' },
+          { status: 409 }
+        )
+      }
+
+      // Handle foreign key constraint (category)
+      if (error.message.includes('Foreign key constraint')) {
+        return NextResponse.json(
+          { error: 'Invalid category selected' },
+          { status: 400 }
+        )
+      }
+
+      if (error.message.includes('Record to update does not exist')) {
+        return NextResponse.json({ error: 'Vehicle not found' }, { status: 404 })
+      }
     }
 
     return NextResponse.json(
-      { error: 'Failed to update vehicle', details: (error as Error).message },
+      { error: 'Failed to update vehicle', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }

@@ -211,17 +211,22 @@ export default function EditVehiclePage() {
       const updatedFormData = {
         ...formData,
         images: allImages,
+        price: Number(formData.price),
+        year: Number(formData.year),
+        mileage: formData.mileage ? Number(formData.mileage) : null,
       }
 
       const res = await fetch(`/api/vehicles/${vehicleId}`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(updatedFormData),
       })
 
       if (!res.ok) {
         const errorData = await res.json()
-        throw new Error(errorData?.message || 'Failed to update vehicle')
+        console.error('Update vehicle error response:', res.status, errorData)
+        throw new Error(`${res.status}: ${errorData?.error || errorData?.details || 'Failed to update vehicle'}`)
       }
 
       // Clean up preview URLs

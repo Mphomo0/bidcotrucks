@@ -18,7 +18,6 @@ export default function AboutSection() {
                 className='rounded-md shadow-lg object-cover'
                 fill
                 sizes='(max-width: 768px) 75vw, (max-width: 1200px) 40vw, 33vw'
-                priority
               />
             </div>
 

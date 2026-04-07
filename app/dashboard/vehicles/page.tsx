@@ -31,6 +31,16 @@ import { toast } from 'react-toastify'
 import Link from 'next/link'
 import Image from 'next/image'
 import { PaginationControls } from '@/components/ui/pagination-controls'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Pencil, Trash2 } from 'lucide-react'
 
 interface Vehicle {
   id: string
@@ -64,13 +74,27 @@ export default function Vehicles() {
     totalPages: 1,
     total: 0,
   })
+  const [search, setSearch] = useState('')
+  const [filters, setFilters] = useState({
+    make: '',
+    status: '',
+  })
+  const [showFilters, setShowFilters] = useState(false)
 
   const { data: session, status } = useSession()
   const router = useRouter()
 
   const fetchVehicles = async (page = 1, limit = 5) => {
     try {
-      const res = await fetch(`/api/vehicles?page=${page}&limit=${limit}`)
+      const params = new URLSearchParams()
+      params.set('page', page.toString())
+      params.set('limit', limit.toString())
+
+      if (search) params.set('search', search)
+      if (filters.make) params.set('make', filters.make)
+      if (filters.status) params.set('status', filters.status)
+
+      const res = await fetch(`/api/vehicles?${params.toString()}`)
       if (!res.ok) throw new Error('Failed to fetch vehicles')
 
       const response = await res.json()
@@ -83,6 +107,28 @@ export default function Vehicles() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    fetchVehicles(1, paginationMeta.limit)
+  }
+
+  const handleFilterChange = (key: string, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }))
+  }
+
+  const applyFilters = () => {
+    setLoading(true)
+    fetchVehicles(1, paginationMeta.limit)
+  }
+
+  const clearFilters = () => {
+    setSearch('')
+    setFilters({ make: '', status: '' })
+    setLoading(true)
+    fetchVehicles(1, paginationMeta.limit)
   }
 
   useEffect(() => {
@@ -195,15 +241,87 @@ export default function Vehicles() {
         </header>
 
         <div className='p-4 pt-0'>
-          <div className='min-h-auto flex-1 rounded-xl bg-muted/50 px-4 top-8'>
-            <div className='flex justify-between items-center w-3/4 mx-auto mt-8'>
-              <h1 className='text-2xl font-bold mt-16 mb-16'>All Vehicles</h1>
+          <div className='min-h-auto flex-1 rounded-xl bg-muted/50 px-4 py-4 top-8 w-full'>
+            <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 w-full mt-8'>
+              <h1 className='text-2xl font-bold mt-16 mb-0'>All Vehicles</h1>
               <Link
                 href='/dashboard/vehicles/addVehicles'
-                className='px-4 py-2 bg-[#24603a] text-white rounded'
+                className='px-4 py-2 bg-[#24603a] text-white rounded mt-16'
               >
                 Add Vehicle
               </Link>
+            </div>
+
+            <div className='mt-6 space-y-4'>
+              <form onSubmit={handleSearch} className='flex flex-col sm:flex-row gap-3'>
+                <Input
+                  type='text'
+                  placeholder='Search by name, make, model...'
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className='flex-1'
+                />
+                <Button type='submit' className='bg-[#24603a]'>
+                  Search
+                </Button>
+                <Button
+                  type='button'
+                  variant='outline'
+                  onClick={() => setShowFilters(!showFilters)}
+                >
+                  {showFilters ? 'Hide Filters' : 'Filters'}
+                </Button>
+              </form>
+
+              {showFilters && (
+                <div className='flex flex-wrap gap-3 p-4 bg-white rounded-lg border'>
+                  <div className='flex-1 min-w-[150px]'>
+                    <Select
+                      value={filters.make}
+                      onValueChange={(value) => handleFilterChange('make', value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder='Select Make' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value='all'>All Makes</SelectItem>
+                        <SelectItem value='ISUZU'>ISUZU</SelectItem>
+                        <SelectItem value='NISSAN'>NISSAN</SelectItem>
+                        <SelectItem value='FAW'>FAW</SelectItem>
+                        <SelectItem value='HINO'>HINO</SelectItem>
+                        <SelectItem value='MERCEDES'>MERCEDES</SelectItem>
+                        <SelectItem value='TOYOTA'>TOYOTA</SelectItem>
+                        <SelectItem value='VOLKSWAGEN'>VOLKSWAGEN</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className='flex-1 min-w-[150px]'>
+                    <Select
+                      value={filters.status}
+                      onValueChange={(value) => handleFilterChange('status', value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder='Select Status' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value='all'>All Status</SelectItem>
+                        <SelectItem value='AVAILABLE'>Available</SelectItem>
+                        <SelectItem value='SOLD'>Sold</SelectItem>
+                        <SelectItem value='PENDING'>Pending</SelectItem>
+                        <SelectItem value='RESERVED'>Reserved</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className='flex gap-2'>
+                    <Button onClick={applyFilters} className='bg-[#24603a]'>
+                      Apply
+                    </Button>
+                    <Button variant='outline' onClick={clearFilters}>
+                      Clear
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
 
             {loading ? (
@@ -215,7 +333,7 @@ export default function Vehicles() {
                 <p>No vehicles found.</p>
               </div>
             ) : (
-              <Table className='w-3/4 mx-auto py-6 mb-8'>
+              <Table className='w-full py-6 mb-8'>
                 <TableCaption>A list of all registered vehicles.</TableCaption>
                 <TableHeader>
                   <TableRow>
@@ -247,18 +365,20 @@ export default function Vehicles() {
                       <TableCell>{vehicle.model}</TableCell>
                       <TableCell>{vehicle.year}</TableCell>
                       <TableCell>{vehicle.price}</TableCell>
-                      <TableCell className='space-x-2 text-center'>
+                      <TableCell className='flex gap-2 justify-center'>
                         <Link
                           href={`/dashboard/vehicles/edit/${vehicle.id}`}
-                          className='text-blue-600 hover:underline'
+                          className='p-2 text-blue-600 hover:bg-blue-50 rounded'
+                          title='Edit'
                         >
-                          Edit
+                          <Pencil size={18} />
                         </Link>
                         <button
-                          className='text-red-600 hover:underline ml-2'
+                          className='p-2 text-red-600 hover:bg-red-50 rounded'
                           onClick={() => handleDelete(vehicle.id)}
+                          title='Delete'
                         >
-                          Delete
+                          <Trash2 size={18} />
                         </button>
                       </TableCell>
                     </TableRow>

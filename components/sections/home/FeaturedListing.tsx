@@ -23,10 +23,19 @@ export default function FeaturedListing() {
     const fetchVehicles = async () => {
       try {
         const response = await fetch('/api/featured/')
+        
+        if (!response.ok) {
+          console.error('API error:', response.status, await response.text())
+          return
+        }
+        
         const data = await response.json()
-
-        // Assuming data is an array of vehicles
-        setVehicles(data)
+        
+        if (Array.isArray(data)) {
+          setVehicles(data)
+        } else if (data.error) {
+          console.error('API error:', data.error)
+        }
       } catch (error) {
         console.error('Error fetching vehicles:', error)
       } finally {
@@ -50,19 +59,25 @@ export default function FeaturedListing() {
         Featured Listings
       </h1>
       <div className='grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-4 place-items-center my-12'>
-        {vehicles.map((vehicle) => (
-          <StockCard
-            key={vehicle.id} // Use a unique key for each StockCard
-            title={vehicle.name}
-            imageUrl={vehicle.images[0].url}
-            mileage={vehicle.mileage}
-            fuelType={vehicle.fuelType}
-            transmission={vehicle.transmission}
-            description={vehicle.description}
-            price={vehicle.price}
-            id={vehicle.id}
-          />
-        ))}
+        {vehicles.length > 0 ? (
+          vehicles.map((vehicle) => (
+            <StockCard
+              key={vehicle.id}
+              title={vehicle.name}
+              imageUrl={vehicle.images?.[0]?.url || ''}
+              mileage={vehicle.mileage}
+              fuelType={vehicle.fuelType}
+              transmission={vehicle.transmission}
+              description={vehicle.description}
+              price={vehicle.price}
+              id={vehicle.id}
+            />
+          ))
+        ) : (
+          <p className="col-span-full text-center text-gray-500 py-8">
+            No vehicles available
+          </p>
+        )}
       </div>
     </main>
   )

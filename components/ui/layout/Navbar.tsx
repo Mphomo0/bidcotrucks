@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { X, Menu } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useSession } from 'next-auth/react'
 import Phone from '@/public/images/icons/7.png'
 import BidcoLogo from '@/public/images/bidco_logo.png'
 
@@ -16,6 +17,7 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [hasFavourites, setHasFavourites] = useState(false)
+  const { data: session } = useSession()
 
   useEffect(() => {
     const favs = getWithExpiry(FAVOURITES_KEY) || []
@@ -56,9 +58,10 @@ export default function Navbar() {
               <Image
                 src={BidcoLogo}
                 width={150}
-                height={10}
+                height={60}
                 alt='Bidco Logo'
                 className='mb-5'
+                style={{ height: 'auto' }}
               />
             </Link>
             {/* Phone Number - Hidden on mobile and small tablets */}
@@ -96,12 +99,21 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <Link
-              href='/trade-in'
-              className='border-2 border-white text-white hover:bg-white hover:text-black px-4 xl:px-6 py-4 rounded transition-colors duration-300 font-semibold text-sm xl:text-base whitespace-nowrap p-6'
-            >
-              SELL A TRUCK
-            </Link>
+            {session ? (
+              <Link
+                href='/dashboard'
+                className='border-2 border-white text-white hover:bg-white hover:text-black px-4 xl:px-6 py-4 rounded transition-colors duration-300 font-semibold text-sm xl:text-base whitespace-nowrap p-6'
+              >
+                DASHBOARD
+              </Link>
+            ) : (
+              <Link
+                href='/trade-in'
+                className='border-2 border-white text-white hover:bg-white hover:text-black px-4 xl:px-6 py-4 rounded transition-colors duration-300 font-semibold text-sm xl:text-base whitespace-nowrap p-6'
+              >
+                SELL A TRUCK
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -128,13 +140,23 @@ export default function Navbar() {
                   {link.label}
                 </Link>
               ))}
-              <Link
-                href='/trade-in'
-                className='border-2 border-white text-white hover:bg-white hover:text-black px-6 py-2 rounded transition-colors duration-300 font-semibold w-auto sm:w-auto mx-4'
-                onClick={toggleMobileMenu}
-              >
-                SELL A TRUCK
-              </Link>
+              {session ? (
+                <Link
+                  href='/dashboard'
+                  className='border-2 border-white text-white hover:bg-white hover:text-black px-6 py-2 rounded transition-colors duration-300 font-semibold w-auto sm:w-auto mx-4'
+                  onClick={toggleMobileMenu}
+                >
+                  DASHBOARD
+                </Link>
+              ) : (
+                <Link
+                  href='/trade-in'
+                  className='border-2 border-white text-white hover:bg-white hover:text-black px-6 py-2 rounded transition-colors duration-300 font-semibold w-auto sm:w-auto mx-4'
+                  onClick={toggleMobileMenu}
+                >
+                  SELL A TRUCK
+                </Link>
+              )}
               <div className='flex items-center space-x-2 text-white pt-2'>
                 {/* <Image src={Phone} alt='phone icon' width={50} height={50} /> */}
                 <div className='flex flex-col'>

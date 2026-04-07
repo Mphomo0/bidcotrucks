@@ -1,18 +1,8 @@
 import { NextResponse, NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
+import { Status } from '@/lib/generated/prisma/client'
 import slugify from 'slugify'
-
-interface Filters {
-  categoryId?: string
-  make?: string
-  model?: string
-  year?: number
-  price?: {
-    gte?: number
-    lte?: number
-  }
-}
 
 // POST /api/vehicles to create a new vehicle
 export const POST = auth(async function (req) {
@@ -174,6 +164,8 @@ export const GET = async (req: NextRequest) => {
     const make = searchParams.get('make')
     const model = searchParams.get('model')
     const year = searchParams.get('year')
+    const status = searchParams.get('status')
+    const search = searchParams.get('search')
 
     const minPrice = searchParams.get('minPrice')
     const maxPrice = searchParams.get('maxPrice')
@@ -181,17 +173,28 @@ export const GET = async (req: NextRequest) => {
     const sort = searchParams.get('sort') || 'createdAt'
     const order = searchParams.get('order') || 'desc'
 
-    const filters: Filters = {}
+    const filters: Record<string, unknown> = {}
 
     if (categoryId) filters.categoryId = categoryId
     if (make) filters.make = make
     if (model) filters.model = model
     if (year) filters.year = Number.parseInt(year)
+    if (status) filters.status = status
+
+    if (search) {
+      filters.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { make: { contains: search, mode: 'insensitive' } },
+        { model: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+      ]
+    }
 
     if (minPrice || maxPrice) {
-      filters.price = {}
-      if (minPrice) filters.price.gte = Number.parseFloat(minPrice)
-      if (maxPrice) filters.price.lte = Number.parseFloat(maxPrice)
+      const priceFilter: { gte?: number; lte?: number } = {}
+      if (minPrice) priceFilter.gte = Number.parseFloat(minPrice)
+      if (maxPrice) priceFilter.lte = Number.parseFloat(maxPrice)
+      filters.price = priceFilter
     }
 
     const total = await prisma.inventory.count({ where: filters })

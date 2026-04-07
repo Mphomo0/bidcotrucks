@@ -20,9 +20,10 @@ const FooterSection = () => {
               <Image
                 src={BidcoLogo}
                 width={150}
-                height={10}
+                height={60}
                 alt="Bidco Logo"
                 className="mb-5"
+                style={{ height: 'auto' }}
               />
             </Link>
 

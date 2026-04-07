@@ -3,6 +3,8 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { SessionProvider } from 'next-auth/react'
+import { AppSidebar } from '@/components/sections/dashboard/AppSidebar'
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import '../globals.css'
 
 const geistSans = Geist({
@@ -33,7 +35,10 @@ export default function DashboardLayout({
       >
         <head />
         <SessionProvider>
-          {children}
+          <SidebarProvider defaultOpen={true}>
+            <AppSidebar />
+            <SidebarInset>{children}</SidebarInset>
+          </SidebarProvider>
           <ToastContainer />
         </SessionProvider>
       </body>

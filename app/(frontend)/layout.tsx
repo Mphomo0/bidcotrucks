@@ -3,9 +3,9 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import '../globals.css'
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
+import { PostHogProvider } from '../providers'
 import Navbar from '@/components/ui/layout/Navbar'
 import FooterSection from '@/components/ui/layout/FooterSection'
-import { PostHogProvider } from '../providers'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -18,12 +18,13 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Search Trucks & Trailers | Find Your Next Vehicle at Bidco Trucks',
+  title:
+    'Bidco Trucks | Quality Used Trucks, Trailers & Plant Equipment in South Africa',
   description:
     'Bidco Trucks (Pty) Ltd specializes in buying and selling clean second-hand trucks, trailers, and plant equipment. Serving South Africa and neighboring countries, we offer quality vehicles at competitive prices.',
 }
 
-export default function RootLayout({
+export default function FrontendLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
@@ -33,7 +34,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <head />
         <PostHogProvider>
           <Navbar />
           {children}
