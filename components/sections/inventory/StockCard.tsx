@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { ikUrl } from '@/lib/imagekit'
 
 interface StockCardProps {
   id: string
@@ -44,12 +45,11 @@ export default function StockCard({
       <div className={`${viewMode === 'list' ? 'md:w-1/3' : 'w-full'}`}>
         <div className='relative w-full h-64 md:h-full'>
           <Image
-            src={imageUrl}
+            src={ikUrl(imageUrl, 640)}
             alt={name}
             width={500}
             height={300}
             className='w-full h-[200px] object-cover'
-            priority
           />
 
           {/* Condition Badge */}

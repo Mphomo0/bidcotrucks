@@ -31,5 +31,13 @@ export const POST = auth(async function (req) {
 // GET /api/category to get all categories
 export const GET = async function () {
   const categories = await prisma.category.findMany()
-  return NextResponse.json({ categories }, { status: 200 })
+  return NextResponse.json(
+    { categories },
+    {
+      status: 200,
+      headers: {
+        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=3600',
+      },
+    }
+  )
 }

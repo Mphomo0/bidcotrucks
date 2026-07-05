@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
         min: priceRange._min.price ?? 0,
         max: priceRange._max.price ?? 0,
       },
-    })
+    }, { headers: { 'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=3600' } })
   } catch (error) {
     console.error('Error fetching filters:', error)
     return NextResponse.json(

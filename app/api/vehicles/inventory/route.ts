@@ -181,7 +181,12 @@ export async function GET(req: NextRequest) {
           years: availableYears.map((item) => item.year),
         },
       },
-      { status: 200 }
+      {
+        status: 200,
+        headers: {
+          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=3600',
+        },
+      }
     )
   } catch (error) {
     console.error('Vehicle fetch error:', error)

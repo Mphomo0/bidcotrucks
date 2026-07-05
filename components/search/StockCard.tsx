@@ -10,9 +10,10 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { IoIosSpeedometer } from 'react-icons/io'
 import Link from 'next/link' // Import Link component
 import { setWithExpiry, getWithExpiry } from '@/lib/localStorageWithExpiry'
+import { ikUrl } from '@/lib/imagekit'
 
 interface Favourite {
-  id: number
+  id: string | number
 }
 
 interface StockCardProps {
@@ -23,7 +24,7 @@ interface StockCardProps {
   transmission: string
   description: string
   price: number
-  id: number // Vehicle ID
+  id: string | number // Vehicle ID
 }
 
 const FAVOURITES_KEY = 'favourites'
@@ -98,7 +99,7 @@ export default function StockCard({ ...props }: StockCardProps) {
         <CardContent className='relative p-0'>
           <div className='relative aspect-[4/3] w-full'>
             <Image
-              src={imageUrl}
+              src={ikUrl(imageUrl, 640)}
               alt={title}
               fill
               className='px-6'

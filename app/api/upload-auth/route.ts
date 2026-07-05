@@ -37,8 +37,6 @@ export const GET = auth(async function (req) {
     token,
   })
 
-  console.log(token)
-
   return NextResponse.json({
     token,
     expire,

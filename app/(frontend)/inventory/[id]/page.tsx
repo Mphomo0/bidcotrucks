@@ -1,289 +1,67 @@
-'use client'
+import { cache } from 'react'
+import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
+import { prisma } from '@/lib/prisma'
+import VehicleDetail, {
+  type VehicleDetailData,
+} from '@/components/sections/inventory/VehicleDetail'
 
-import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
-import Image from 'next/image'
-import PageWrapper from '@/components/ui/layout/PageWrapper'
-import EnquiryForm from '@/components/sections/forms/EnquiryForm'
-import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
-import { useKeenSlider } from 'keen-slider/react'
-import 'keen-slider/keen-slider.min.css'
+// ISR: each vehicle page is cached and regenerated at most every 5 minutes
+export const revalidate = 300
 
-interface Image {
-  url: string
-}
+// cache() dedupes the query between generateMetadata and the page render
+const getVehicle = cache(async (id: string): Promise<VehicleDetailData | null> => {
+  try {
+    const vehicle = await prisma.inventory.findUnique({ where: { id } })
+    if (!vehicle) return null
 
-interface Vehicle {
-  id: number
-  name: string
-  make: string
-  model: string
-  year: number
-  price: number
-  mileage: number
-  fuelType: string
-  condition: string
-  transmission: string
-  status: string
-  description?: string
-  slug?: string
-  categoryId?: string
-  images: Image[]
-}
-
-export default function VehiclePage() {
-  const [vehicle, setVehicle] = useState<Vehicle | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [currentSlide, setCurrentSlide] = useState(0)
-
-  const [sliderRef, sliderInstanceRef] = useKeenSlider<HTMLDivElement>({
-    slideChanged(slider) {
-      setCurrentSlide(slider.track.details.rel)
-    },
-    slides: {
-      perView: 1,
-      spacing: 0,
-    },
-    loop: true,
-  })
-
-  const [thumbnailRef] = useKeenSlider<HTMLDivElement>({
-    initial: 0,
-    slides: { perView: 5, spacing: 10 },
-    slideChanged: (slider) => {
-      sliderInstanceRef.current?.moveToIdx(slider.track.details.rel)
-    },
-  })
-
-  const params = useParams()
-  const id = params?.id
-
-  useEffect(() => {
-    const fetchVehicle = async () => {
-      if (!id) return
-
-      try {
-        const res = await fetch(`/api/vehicles/${id}`)
-
-        if (!res.ok) throw new Error('Vehicle not found')
-
-        const json = await res.json()
-        setVehicle(json.vehicle) // updated to get the 'vehicle' key from response
-      } catch (error) {
-        console.error('Error fetching vehicle:', error)
-        setError('Failed to load vehicle data')
-      } finally {
-        setLoading(false)
-      }
+    return {
+      id: vehicle.id,
+      name: vehicle.name,
+      make: vehicle.make,
+      model: vehicle.model,
+      year: vehicle.year,
+      price: vehicle.price,
+      mileage: vehicle.mileage,
+      fuelType: vehicle.fuelType,
+      condition: vehicle.condition,
+      transmission: vehicle.transmission,
+      status: vehicle.status,
+      description: vehicle.description,
+      images: (vehicle.images as { url: string }[] | null) ?? [],
     }
+  } catch (error) {
+    // Invalid ObjectId strings make Prisma throw; treat them as not found
+    console.error('Error fetching vehicle:', error)
+    return null
+  }
+})
 
-    fetchVehicle()
-  }, [id])
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}): Promise<Metadata> {
+  const vehicle = await getVehicle((await params).id)
+  if (!vehicle) return { title: 'Vehicle not found | Bidco Trucks' }
 
-  if (loading)
-    return <p className='flex justify-center items-center h-96'>Loading...</p>
-  if (error) return <p>{error}</p>
-  if (!vehicle)
-    return (
-      <p className='flex justify-center items-center h-96'>Vehicle not found</p>
-    )
+  return {
+    title: `${vehicle.name} | Bidco Trucks South Africa`,
+    description: `${vehicle.year} ${vehicle.make} ${vehicle.model} for sale at R${vehicle.price.toLocaleString()}. ${vehicle.description?.slice(0, 150) ?? ''}`,
+    openGraph: {
+      title: `${vehicle.name} | Bidco Trucks`,
+      images: vehicle.images[0]?.url ? [vehicle.images[0].url] : [],
+    },
+  }
+}
 
-  return (
-    <>
-      <PageWrapper
-        heading='Welcome To Our Company'
-        title='single vehicle'
-        link={{ href: `/inventory/${id}`, text: 'Single Vehicle' }}
-      />
+export default async function VehiclePage({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const vehicle = await getVehicle((await params).id)
+  if (!vehicle) notFound()
 
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-        <div className='grid grid-cols-1 gap-4 lg:grid-cols-[3fr_1fr] mt-12 mb-12'>
-          <div className='mb-24'>
-            <h1 className='text-3xl font-bold mb-6'>{vehicle.name}</h1>
-
-            <div className='max-w-4xl mx-auto'>
-              {vehicle.images.length > 0 && (
-                <>
-                  {/* Main image slider */}
-                  <div className='relative'>
-                    <div
-                      ref={sliderRef}
-                      className='keen-slider aspect-[16/9] w-full mb-4 rounded-lg overflow-hidden shadow-lg border bg-neutral-50'
-                    >
-                      {vehicle.images.map((img, index) => (
-                        <div
-                          className='keen-slider__slide relative flex items-center justify-center bg-neutral-100'
-                          key={index}
-                        >
-                          <div className='relative w-full h-full'>
-                            <Image
-                              src={img.url}
-                              alt={`${vehicle.name} image ${index + 1}`}
-                              fill
-                              className='object-cover'
-                              sizes='(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 60vw'
-                              priority={index === 0}
-                            />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Navigation arrows */}
-                    {vehicle.images.length > 1 && (
-                      <>
-                        <button
-                          onClick={() => sliderInstanceRef.current?.prev()}
-                          className='absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors'
-                          aria-label='Previous image'
-                        >
-                          <svg
-                            xmlns='http://www.w3.org/2000/svg'
-                            fill='none'
-                            viewBox='0 0 24 24'
-                            stroke='currentColor'
-                            className='w-5 h-5'
-                          >
-                            <path
-                              strokeLinecap='round'
-                              strokeLinejoin='round'
-                              strokeWidth={2}
-                              d='M15 19l-7-7 7-7'
-                            />
-                          </svg>
-                        </button>
-                        <button
-                          onClick={() => sliderInstanceRef.current?.next()}
-                          className='absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors'
-                          aria-label='Next image'
-                        >
-                          <svg
-                            xmlns='http://www.w3.org/2000/svg'
-                            fill='none'
-                            viewBox='0 0 24 24'
-                            stroke='currentColor'
-                            className='w-5 h-5'
-                          >
-                            <path
-                              strokeLinecap='round'
-                              strokeLinejoin='round'
-                              strokeWidth={2}
-                              d='M9 5l7 7-7 7'
-                            />
-                          </svg>
-                        </button>
-                      </>
-                    )}
-                  </div>
-
-                  {/* Thumbnail slider */}
-                  {vehicle.images.length > 1 && (
-                    <div
-                      ref={thumbnailRef}
-                      className='keen-slider mb-8 cursor-pointer px-2'
-                    >
-                      {vehicle.images.map((img, index) => (
-                        <div
-                          key={index}
-                          className={`keen-slider__slide transition-all rounded overflow-hidden aspect-video ${
-                            currentSlide === index
-                              ? 'ring-2 ring-green-600 scale-95'
-                              : 'opacity-70 hover:opacity-100'
-                          }`}
-                          onClick={() =>
-                            sliderInstanceRef.current?.moveToIdx(index)
-                          }
-                        >
-                          <div className='relative w-full h-full'>
-                            <Image
-                              src={img.url}
-                              alt={`Thumbnail ${index + 1}`}
-                              fill
-                              className='object-cover'
-                              sizes='(max-width: 768px) 100px, (max-width: 1024px) 150px, 200px'
-                            />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-
-            <Table>
-              <TableBody>
-                <TableRow>
-                  <TableCell className='font-medium'>Make</TableCell>
-                  <TableCell className='text-right'>{vehicle.make}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className='font-medium'>Model</TableCell>
-                  <TableCell className='text-right'>{vehicle.model}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className='font-medium'>Year</TableCell>
-                  <TableCell className='text-right'>{vehicle.year}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className='font-medium'>Mileage</TableCell>
-                  <TableCell className='text-right'>
-                    {vehicle.mileage.toLocaleString()} km
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className='font-medium'>Transmission</TableCell>
-                  <TableCell className='text-right'>
-                    {vehicle.transmission}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className='font-medium'>Fuel Type</TableCell>
-                  <TableCell className='text-right'>
-                    {vehicle.fuelType}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className='font-medium'>Condition</TableCell>
-                  <TableCell className='text-right'>
-                    {vehicle.condition}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className='font-medium'>Status</TableCell>
-                  <TableCell className='text-right'>{vehicle.status}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className='font-medium'>Description</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>{vehicle.description}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </div>
-
-          <div>
-            <h1 className='text-right text-3xl font-bold mb-5'>
-              R{vehicle.price.toLocaleString()}
-            </h1>
-            <div className='space-y-6 p-4 border rounded shadow h-[620px] sticky top-10 mb-2'>
-              <div className='bg-[#24603a] p-4 rounded'>
-                <h2 className='text-xl text-white font-semibold mb-2'>
-                  Contact Seller
-                </h2>
-                <ul className='space-y-1'>
-                  <li className='text-2xl text-white semibold'>
-                    012 808 9903/4/5
-                  </li>
-                </ul>
-              </div>
-              <EnquiryForm vehicleName={vehicle.name} />
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  )
+  return <VehicleDetail vehicle={vehicle} />
 }
